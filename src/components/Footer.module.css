@@ -1,0 +1,10 @@
+.footer {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 28px 40px;
+  text-align: center;
+  font-family: var(--ruk-font-family);
+  font-size: 0.78rem;
+  color: var(--ruk-color-text-muted);
+  border-top: 1px solid var(--ruk-color-border);
+}

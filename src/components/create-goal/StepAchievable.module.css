@@ -1,0 +1,10 @@
+.suggestion {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-left: 3px solid rgb(var(--step-rgb));
+  background: rgba(var(--step-rgb), 0.08);
+  border-radius: var(--ruk-radius-sm);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ruk-color-text);
+}

@@ -1,0 +1,43 @@
+/*
+ * App-local tokens for the SMART goal creation flow — not part of serious-component-library's
+ * shared --ruk-* token set, since these only mean something on this one page (see the
+ * "component gap analysis" blueprint for the reasoning). Themed the same way the library
+ * themes itself: a bare :root block for light/default, overridden under [data-ruk-theme]
+ * (set by <ThemeProvider>, see component-library/src/theme/ThemeProvider.tsx — that's the
+ * folder name on disk, unchanged by the npm package rename) rather than a separate
+ * [data-theme] attribute of our own.
+ */
+
+:root {
+  /* SMART step sequence — a light-to-deep ramp, one hue family, distinct from the
+     (unordered) category colors below. S is the lightest/newest idea; T is the
+     deepest/most committed. Order carries meaning, so one ramp, not five arbitrary hues. */
+  --step-s-rgb: 176, 95, 158;
+  --step-m-rgb: 158, 68, 138;
+  --step-a-rgb: 140, 48, 118;
+  --step-r-rgb: 118, 33, 98;
+  --step-t-rgb: 92, 20, 78;
+
+  /* Life-area categories, auto-detected from the user's rough idea. */
+  --cat-health: #2f8f7c;
+  --cat-career: #6d5bd0;
+  --cat-finance: #b8862c;
+  --cat-learning: #3568b0;
+  --cat-relationships: #c05a7a;
+  --cat-personal: #5c7a3f;
+}
+
+[data-ruk-theme='dark'] {
+  --step-s-rgb: 224, 158, 214;
+  --step-m-rgb: 208, 130, 196;
+  --step-a-rgb: 192, 102, 178;
+  --step-r-rgb: 176, 74, 160;
+  --step-t-rgb: 158, 48, 140;
+
+  --cat-health: #5fc4ae;
+  --cat-career: #a89af0;
+  --cat-finance: #e0b34e;
+  --cat-learning: #7fb0ea;
+  --cat-relationships: #ec9db6;
+  --cat-personal: #a3c281;
+}

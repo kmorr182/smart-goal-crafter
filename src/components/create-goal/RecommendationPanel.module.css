@@ -1,0 +1,78 @@
+.wrap {
+  margin-bottom: 14px;
+}
+
+.result {
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--ruk-color-surface-raised, var(--ruk-color-bg));
+  border: 1px solid var(--ruk-color-border);
+  border-radius: var(--ruk-radius-md);
+  font-family: var(--ruk-font-family);
+}
+
+.resultHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.resultLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ruk-color-text-muted);
+}
+
+.previewBadge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: var(--ruk-radius-pill);
+  background: var(--ruk-color-surface);
+  border: 1px solid var(--ruk-color-border);
+  color: var(--ruk-color-text-muted);
+}
+
+.polished {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--ruk-color-text);
+  margin: 0 0 14px;
+}
+
+.supportingLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ruk-color-text-muted);
+  margin-bottom: 8px;
+}
+
+.supportingList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.supportingList li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.supportingList strong {
+  font-size: 0.85rem;
+  color: var(--ruk-color-text);
+}
+
+.supportingList span {
+  font-size: 0.78rem;
+  color: var(--ruk-color-text-muted);
+}

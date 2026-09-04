@@ -1,0 +1,12 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.daysLeft {
+  font-size: 0.82rem;
+  color: var(--ruk-color-text-muted);
+  white-space: nowrap;
+}

@@ -1,0 +1,66 @@
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px 120px;
+}
+
+.builder {
+  padding: 8px 0 0;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: rise 420ms ease both;
+}
+
+.builderGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 26px;
+  align-items: start;
+}
+
+.stepList.dimmed {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.nextNote {
+  max-width: 720px;
+  margin: 8px auto 0;
+  text-align: center;
+  font-size: 0.84rem;
+  color: var(--ruk-color-text-muted);
+  padding-top: 28px;
+  border-top: 1px solid var(--ruk-color-border);
+  font-family: var(--ruk-font-family);
+}
+
+.nextNote strong {
+  color: var(--ruk-color-text);
+}
+
+@media (max-width: 880px) {
+  .builderGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes rise {
+    from,
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

@@ -1,0 +1,77 @@
+.hero {
+  text-align: center;
+  padding: 72px 0 40px;
+}
+
+.kicker {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ruk-color-primary);
+  margin-bottom: 14px;
+}
+
+.heading {
+  font-family: var(--ruk-font-family);
+  font-size: clamp(1.9rem, 4vw, 2.7rem);
+  font-weight: 700;
+  margin: 0 0 12px;
+  line-height: 1.15;
+  text-wrap: balance;
+  color: var(--ruk-color-text);
+}
+
+.lede {
+  max-width: 46ch;
+  margin: 0 auto 32px;
+  color: var(--ruk-color-text-muted);
+  font-size: 1.05rem;
+  font-family: var(--ruk-font-family);
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  max-width: 640px;
+  margin: 0 auto 18px;
+}
+
+.row > :first-child {
+  flex: 1;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.chip {
+  font-family: var(--ruk-font-family);
+  font-size: 0.82rem;
+  padding: 7px 14px;
+  border-radius: var(--ruk-radius-pill);
+  border: 1px solid var(--ruk-color-border);
+  background: var(--ruk-color-surface);
+  color: var(--ruk-color-text-muted);
+  cursor: pointer;
+  transition: all var(--ruk-transition-fast);
+}
+
+.chip:hover {
+  border-color: var(--ruk-color-border-hover);
+  color: var(--ruk-color-text);
+}
+
+.chip:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ruk-focus-ring-width, 3px) var(--ruk-color-focus-ring);
+}
+
+@media (max-width: 640px) {
+  .row {
+    flex-direction: column;
+  }
+}

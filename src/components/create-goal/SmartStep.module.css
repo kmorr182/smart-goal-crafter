@@ -1,0 +1,134 @@
+.step {
+  padding: 26px 0;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: rise 420ms ease both;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.letter {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+  font-family: var(--ruk-font-family);
+  background: rgba(var(--step-rgb), 0.12);
+  color: rgb(var(--step-rgb));
+  border: 1.5px solid rgba(var(--step-rgb), 0.4);
+  transition: all 160ms ease;
+}
+
+.letter.filled {
+  background: rgb(var(--step-rgb));
+  border-color: rgb(var(--step-rgb));
+  color: #fff;
+}
+
+.letter.pulse {
+  animation: step-pop 520ms ease;
+}
+
+.titleRow {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 1rem;
+  font-family: var(--ruk-font-family);
+  color: var(--ruk-color-text);
+}
+
+.prompt {
+  font-size: 0.84rem;
+  color: var(--ruk-color-text-muted);
+  font-family: var(--ruk-font-family);
+  margin: 3px 0 0 46px;
+}
+
+.subPrompts {
+  list-style: none;
+  margin: 6px 0 0 46px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.subPrompts li {
+  font-size: 0.78rem;
+  color: var(--ruk-color-text-muted);
+  font-family: var(--ruk-font-family);
+  opacity: 0.8;
+  padding-left: 14px;
+  position: relative;
+}
+
+.subPrompts li::before {
+  content: '·';
+  position: absolute;
+  left: 3px;
+  color: rgb(var(--step-rgb));
+}
+
+.body {
+  margin-left: 46px;
+  margin-top: 14px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes step-pop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.22);
+    box-shadow: 0 0 0 9px rgba(var(--step-rgb), 0.22);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(var(--step-rgb), 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes rise {
+    from,
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes step-pop {
+    from,
+    to {
+      transform: scale(1);
+    }
+  }
+}
