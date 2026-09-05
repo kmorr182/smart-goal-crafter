@@ -173,7 +173,9 @@
 }
 
 .successView h3 {
-  font-size: 1.05rem;
+  font-family: var(--display-font-family);
+  font-size: 1.5rem;
+  font-weight: 400;
   margin: 0 0 6px;
   color: var(--ruk-color-text);
 }

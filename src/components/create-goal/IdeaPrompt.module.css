@@ -13,11 +13,11 @@
 }
 
 .heading {
-  font-family: var(--ruk-font-family);
-  font-size: clamp(1.9rem, 4vw, 2.7rem);
-  font-weight: 700;
+  font-family: var(--display-font-family);
+  font-size: clamp(2.4rem, 5.2vw, 3.6rem);
+  font-weight: 400;
   margin: 0 0 12px;
-  line-height: 1.15;
+  line-height: 1.1;
   text-wrap: balance;
   color: var(--ruk-color-text);
 }
@@ -25,7 +25,7 @@
 .lede {
   max-width: 46ch;
   margin: 0 auto 32px;
-  color: var(--ruk-color-text-muted);
+  color: var(--ruk-color-text);
   font-size: 1.05rem;
   font-family: var(--ruk-font-family);
 }
@@ -39,6 +39,7 @@
 
 .row > :first-child {
   flex: 1;
+  min-width: 0;
 }
 
 .chipRow {

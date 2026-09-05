@@ -81,11 +81,6 @@ export function CreateGoal() {
               onEdit={() => setSaved(false)}
             />
           </div>
-
-          <p className={styles.nextNote}>
-            <strong>What's next:</strong> this page ends at one well-formed goal. Tracking — check-ins, milestones,
-            progress over time — is the next phase, once this creation flow feels right.
-          </p>
         </div>
       )}
     </main>

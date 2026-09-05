@@ -9,6 +9,22 @@
  */
 
 :root {
+  /*
+   * Overrides serious-component-library's own --ruk-font-family (Atkinson Hyperlegible Next,
+   * self-hosted with zero external requests — see that library's README) with a font
+   * pairing loaded from Google Fonts in index.html. A real tradeoff, not a free upgrade:
+   * this app now makes an external font request the library itself deliberately avoids.
+   * --ruk-font-family drives every component-library component too (Button, Input, ...),
+   * so this reskins the whole app's body/UI text, not just this app's own markup.
+   */
+  --ruk-font-family: 'Karla', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /*
+   * Headings and step titles only — applied selectively, not a --ruk-* override. Instrument
+   * Serif ships weight 400 only (regular + italic, no bold cut), so anything using this
+   * token should rely on size for hierarchy, not font-weight — see the elements that use it.
+   */
+  --display-font-family: 'Instrument Serif', 'Karla', system-ui, serif;
+
   /* SMART step sequence — a light-to-deep ramp, one hue family, distinct from the
      (unordered) category colors below. S is the lightest/newest idea; T is the
      deepest/most committed. Order carries meaning, so one ramp, not five arbitrary hues. */
@@ -18,13 +34,20 @@
   --step-r-rgb: 118, 33, 98;
   --step-t-rgb: 92, 20, 78;
 
-  /* Life-area categories, auto-detected from the user's rough idea. */
-  --cat-health: #2f8f7c;
-  --cat-career: #6d5bd0;
-  --cat-finance: #b8862c;
-  --cat-learning: #3568b0;
-  --cat-relationships: #c05a7a;
-  --cat-personal: #5c7a3f;
+  /*
+   * Life-area categories, auto-detected from the user's rough idea. Same values in both
+   * themes, unlike the step ramp above — these only ever appear as an opaque badge fill
+   * with white text painted on top (GoalPreviewPanel's category badge), so the contrast
+   * that matters (fill vs. white text) doesn't depend on the surrounding page background.
+   * Each is dark/saturated enough to clear 4.5:1 for that white text with real margin
+   * (5.2–7.0:1) while keeping its own hue recognizable.
+   */
+  --cat-health: #1a7a66;
+  --cat-career: #6a4fc4;
+  --cat-finance: #8a5f1a;
+  --cat-learning: #2a5a96;
+  --cat-relationships: #9c3f5c;
+  --cat-personal: #4a6030;
 }
 
 [data-ruk-theme='dark'] {
@@ -33,11 +56,4 @@
   --step-a-rgb: 192, 102, 178;
   --step-r-rgb: 176, 74, 160;
   --step-t-rgb: 158, 48, 140;
-
-  --cat-health: #5fc4ae;
-  --cat-career: #a89af0;
-  --cat-finance: #e0b34e;
-  --cat-learning: #7fb0ea;
-  --cat-relationships: #ec9db6;
-  --cat-personal: #a3c281;
 }

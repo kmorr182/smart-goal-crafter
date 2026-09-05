@@ -49,15 +49,15 @@
 }
 
 .title {
-  font-weight: 700;
-  font-size: 1rem;
-  font-family: var(--ruk-font-family);
+  font-weight: 400;
+  font-size: 1.4rem;
+  font-family: var(--display-font-family);
   color: var(--ruk-color-text);
 }
 
 .prompt {
   font-size: 0.84rem;
-  color: var(--ruk-color-text-muted);
+  color: var(--ruk-color-text);
   font-family: var(--ruk-font-family);
   margin: 3px 0 0 46px;
 }
@@ -73,9 +73,8 @@
 
 .subPrompts li {
   font-size: 0.78rem;
-  color: var(--ruk-color-text-muted);
+  color: var(--ruk-color-text);
   font-family: var(--ruk-font-family);
-  opacity: 0.8;
   padding-left: 14px;
   position: relative;
 }
@@ -90,6 +89,17 @@
 .body {
   margin-left: 46px;
   margin-top: 14px;
+}
+
+@media (max-width: 480px) {
+  .prompt,
+  .subPrompts {
+    margin-left: 0;
+  }
+
+  .body {
+    margin-left: 0;
+  }
 }
 
 @keyframes rise {
