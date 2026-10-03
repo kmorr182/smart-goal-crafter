@@ -1,6 +1,7 @@
+/* Sits between the step list and the "review & save" step once the form is filled in. */
 .panel {
-  position: sticky;
-  top: 24px;
+  max-width: var(--content-max-width);
+  margin: 32px auto 0;
   background: var(--ruk-color-surface);
   border: 1px solid var(--ruk-color-border);
   border-radius: var(--ruk-radius-lg, 14px);
@@ -93,41 +94,13 @@
   color: rgb(var(--step-rgb));
 }
 
-.sentence {
-  font-size: 1rem;
-  line-height: 1.6;
-  padding: 16px;
+.sentenceBlock {
   background: var(--ruk-color-surface-raised, var(--ruk-color-bg));
-  border: 1px dashed var(--ruk-color-border-hover);
+  border: 1px solid var(--ruk-color-border);
   border-radius: var(--ruk-radius-md);
-  margin-bottom: 14px;
-  min-height: 90px;
-  color: var(--ruk-color-text);
-}
-
-.blank {
-  color: var(--ruk-color-text-muted);
-  font-style: italic;
-}
-
-.partR {
-  color: rgb(var(--step-r-rgb));
-  font-weight: 700;
-}
-
-.partS {
-  color: rgb(var(--step-s-rgb));
-  font-weight: 700;
-}
-
-.partM {
-  color: rgb(var(--step-m-rgb));
-  font-weight: 700;
-}
-
-.partT {
-  color: rgb(var(--step-t-rgb));
-  font-weight: 700;
+  padding: 14px;
+  font-size: 0.86rem;
+  margin-bottom: 18px;
 }
 
 .rationale {
@@ -220,10 +193,4 @@
 .editButton {
   width: 100%;
   justify-content: center;
-}
-
-@media (max-width: 880px) {
-  .panel {
-    position: static;
-  }
 }

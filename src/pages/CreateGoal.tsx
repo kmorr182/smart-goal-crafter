@@ -6,7 +6,10 @@ import { StepMeasurable } from '../components/create-goal/StepMeasurable'
 import { StepAchievable } from '../components/create-goal/StepAchievable'
 import { StepRelevant } from '../components/create-goal/StepRelevant'
 import { StepTimebound } from '../components/create-goal/StepTimebound'
+import { GoalSentenceBar } from '../components/create-goal/GoalSentenceBar'
 import { GoalPreviewPanel } from '../components/create-goal/GoalPreviewPanel'
+import { StepProgressBar } from '../components/create-goal/StepProgressBar'
+import { SettingsButton } from '../components/SettingsButton'
 import { CATEGORIES, detectCategory } from '../data/categories'
 import { EMPTY_GOAL_DRAFT, computeCompletion } from '../types/goal'
 import type { GoalDraft } from '../types/goal'
@@ -31,12 +34,15 @@ export function CreateGoal() {
   }
 
   return (
-    <main className={styles.page}>
-      <IdeaPrompt value={idea} onChange={setIdea} onContinue={handleContinue} />
+    <>
+      <SettingsButton />
+      {started && <GoalSentenceBar draft={draft} completion={completion} />}
 
-      {started && (
-        <div className={styles.builder} ref={builderRef}>
-          <div className={styles.builderGrid}>
+      <main className={[styles.page, started ? styles.withProgressBar : ''].filter(Boolean).join(' ')}>
+        <IdeaPrompt value={idea} onChange={setIdea} onContinue={handleContinue} />
+
+        {started && (
+          <div className={styles.builder} ref={builderRef}>
             <div className={[styles.stepList, saved ? styles.dimmed : ''].filter(Boolean).join(' ')}>
               <StepSpecific
                 value={draft.specific}
@@ -81,8 +87,10 @@ export function CreateGoal() {
               onEdit={() => setSaved(false)}
             />
           </div>
-        </div>
-      )}
-    </main>
+        )}
+
+        {started && <StepProgressBar completion={completion} />}
+      </main>
+    </>
   )
 }

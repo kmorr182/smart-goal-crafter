@@ -25,6 +25,11 @@
    */
   --display-font-family: 'Instrument Serif', 'Karla', system-ui, serif;
 
+  /* Shared reading width for the goal panel and the step list. 
+     This keeps them visually aligned as one column instead of two
+     different-width blocks stacked on top of each other. */
+  --content-max-width: 760px;
+
   /* SMART step sequence — a light-to-deep ramp, one hue family, distinct from the
      (unordered) category colors below. S is the lightest/newest idea; T is the
      deepest/most committed. Order carries meaning, so one ramp, not five arbitrary hues. */

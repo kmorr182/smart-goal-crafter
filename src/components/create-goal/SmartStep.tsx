@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 import type { StepKey } from '../../types/goal'
+import { STEP_ORDER, stepElementId } from '../../types/goal'
 import { usePulseOnComplete } from '../../hooks/usePulseOnComplete'
 import styles from './SmartStep.module.css'
 
@@ -11,13 +12,9 @@ const STEP_RGB_VAR: Record<StepKey, string> = {
   t: 'var(--step-t-rgb)',
 }
 
-const STEP_LETTER: Record<StepKey, string> = {
-  s: 'S',
-  m: 'M',
-  a: 'A',
-  r: 'R',
-  t: 'T',
-}
+const STEP_LETTER: Record<StepKey, string> = Object.fromEntries(
+  STEP_ORDER.map(({ key, letter }) => [key, letter]),
+) as Record<StepKey, string>
 
 export interface SmartStepProps {
   stepKey: StepKey
@@ -44,6 +41,7 @@ export function SmartStep({ stepKey, title, prompts, filled, actions, delayMs = 
 
   return (
     <div
+      id={stepElementId(stepKey)}
       className={styles.step}
       style={{ '--step-rgb': STEP_RGB_VAR[stepKey], animationDelay: `${delayMs}ms` } as CSSProperties}
     >
