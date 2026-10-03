@@ -1,0 +1,30 @@
+.sentence {
+  font-family: var(--ruk-font-family);
+  line-height: 1.5;
+  color: var(--ruk-color-text);
+}
+
+.blank {
+  color: var(--ruk-color-text-muted);
+  font-style: italic;
+}
+
+.partR {
+  color: rgb(var(--step-r-rgb));
+  font-weight: 700;
+}
+
+.partS {
+  color: rgb(var(--step-s-rgb));
+  font-weight: 700;
+}
+
+.partM {
+  color: rgb(var(--step-m-rgb));
+  font-weight: 700;
+}
+
+.partT {
+  color: rgb(var(--step-t-rgb));
+  font-weight: 700;
+}

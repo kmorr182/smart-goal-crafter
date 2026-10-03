@@ -1,21 +1,15 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties } from 'react'
 import { Button } from 'serious-component-library'
 import type { GoalDraft, GoalMetric, StepCompletion, StepKey } from '../../types/goal'
+import { STEP_ORDER } from '../../types/goal'
 import { CATEGORIES } from '../../data/categories'
 import { confidenceLabel } from '../../utils/confidence'
 import { formatDate } from '../../utils/date'
 import { usePulseOnComplete } from '../../hooks/usePulseOnComplete'
+import { GoalSentence } from './GoalSentence'
 import { RecommendationPanel } from './RecommendationPanel'
 import { ShareGoal } from './ShareGoal'
 import styles from './GoalPreviewPanel.module.css'
-
-const STEP_ORDER: { key: StepKey; label: string }[] = [
-  { key: 's', label: 'S' },
-  { key: 'm', label: 'M' },
-  { key: 'a', label: 'A' },
-  { key: 'r', label: 'R' },
-  { key: 't', label: 'T' },
-]
 
 const STEP_RGB_VAR: Record<StepKey, string> = {
   s: 'var(--step-s-rgb)',
@@ -33,22 +27,6 @@ function MeterSegment({ stepKey, label, on }: { stepKey: StepKey; label: string;
       <span className={[styles.meterLabel, on ? styles.on : ''].filter(Boolean).join(' ')}>{label}</span>
     </div>
   )
-}
-
-/** The "measured by ..." clause of the live sentence — phrasing differs by metric mode. */
-function measurableClause(metric: GoalMetric, partClass: string): ReactNode {
-  if (metric.mode === 'quantity') {
-    return (
-      <>
-        reaching{' '}
-        <span className={partClass}>
-          {metric.target} {metric.unit}
-        </span>{' '}
-        (from {metric.start || '0'})
-      </>
-    )
-  }
-  return <span className={partClass}>{metric.criterion}</span>
 }
 
 /** The metric line on the saved goal card — differs by metric mode. */
@@ -107,39 +85,20 @@ export function GoalPreviewPanel({ draft, completion, saved, onSave, onEdit }: G
 
   return (
     <div className={styles.panel}>
-      <div className={styles.panelLabel}>Your goal, so far</div>
+      <div className={styles.panelLabel}>Progress &amp; save</div>
       {draft.idea && (
         <span className={styles.categoryBadge} style={{ background: category.colorVar }}>
           {category.label}
         </span>
       )}
       <div className={styles.meter}>
-        {STEP_ORDER.map(({ key, label }) => (
-          <MeterSegment key={key} stepKey={key} label={label} on={completion[key]} />
+        {STEP_ORDER.map(({ key, letter }) => (
+          <MeterSegment key={key} stepKey={key} label={letter} on={completion[key]} />
         ))}
       </div>
 
-      <div className={styles.sentence}>
-        In order to{' '}
-        {completion.r ? (
-          <span className={styles.partR}>{draft.relevant}</span>
-        ) : (
-          <span className={styles.blank}>something that matters to you</span>
-        )}
-        , I will{' '}
-        {completion.s ? (
-          <span className={styles.partS}>{draft.specific}</span>
-        ) : (
-          <span className={styles.blank}>something specific</span>
-        )}
-        , measured by{' '}
-        {completion.m ? (
-          measurableClause(draft.metric, styles.partM)
-        ) : (
-          <span className={styles.blank}>a target number</span>
-        )}
-        , by{' '}
-        {completion.t ? <span className={styles.partT}>{dueDateLabel}</span> : <span className={styles.blank}>a target date</span>}.
+      <div className={styles.sentenceBlock}>
+        <GoalSentence draft={draft} completion={completion} />
       </div>
 
       <RecommendationPanel draft={draft} disabled={!canSave} />

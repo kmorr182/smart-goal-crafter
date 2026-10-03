@@ -1,0 +1,162 @@
+.bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  /* flex-start, not center: centering-by-total-height would line the help button up with the
+     midpoint of dot+label together, sitting visibly below the dots themselves. The help button
+     gets an explicit offset instead, matched to the dots' own vertical center. */
+  align-items: flex-start;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px 20px;
+  background: var(--ruk-color-surface);
+  border-top: 1px solid var(--ruk-color-border);
+  box-shadow: 0 -8px 24px -12px rgba(15, 23, 42, 0.25);
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--ruk-radius-md);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--ruk-font-family);
+  transition: background-color 160ms ease;
+}
+
+.step:hover {
+  background: rgba(var(--step-rgb), 0.08);
+}
+
+.step:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ruk-focus-ring-width, 3px) var(--ruk-color-focus-ring);
+}
+
+.step.active {
+  background: rgba(var(--step-rgb), 0.14);
+}
+
+.dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  background: rgba(var(--step-rgb), 0.12);
+  color: rgb(var(--step-rgb));
+  border: 1.5px solid rgba(var(--step-rgb), 0.4);
+  transition: all 160ms ease;
+}
+
+.step.active .dot {
+  box-shadow: 0 0 0 3px rgba(var(--step-rgb), 0.25);
+}
+
+.dot.filled {
+  background: rgb(var(--step-rgb));
+  border-color: rgb(var(--step-rgb));
+  color: #fff;
+}
+
+.label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--ruk-color-text-muted);
+  white-space: nowrap;
+}
+
+.step.active .label {
+  color: rgb(var(--step-rgb));
+}
+
+.help {
+  flex-shrink: 0;
+  /* Lines the button's own vertical center up with the dots' center (padding-top + half the
+     dot's 30px), now that .bar aligns items to flex-start instead of centering by total height. */
+  margin-top: 4px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--ruk-color-border);
+  background: var(--ruk-color-surface-raised, var(--ruk-color-bg));
+  color: var(--ruk-color-text-muted);
+  font-family: var(--ruk-font-family);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 160ms ease;
+}
+
+.help:hover {
+  color: var(--ruk-color-text);
+  border-color: var(--ruk-color-border-hover);
+}
+
+.help:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--ruk-focus-ring-width, 3px) var(--ruk-color-focus-ring);
+}
+
+.helpContent {
+  width: 260px;
+  padding: 14px;
+  font-family: var(--ruk-font-family);
+}
+
+.helpTitle {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ruk-color-text-muted);
+  margin-bottom: 10px;
+}
+
+.helpItem {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ruk-color-text);
+  margin-bottom: 8px;
+}
+
+.helpItem:last-child {
+  margin-bottom: 0;
+}
+
+.helpItem strong {
+  color: var(--ruk-color-text);
+}
+
+@media (max-width: 560px) {
+  .bar {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .label {
+    display: none;
+  }
+
+  .step {
+    padding: 6px 8px;
+  }
+}
