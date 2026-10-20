@@ -51,7 +51,7 @@ export interface GoalPreviewPanelProps {
 
 export function GoalPreviewPanel({ draft, completion, saved, onSave, onEdit }: GoalPreviewPanelProps) {
   const category = CATEGORIES[draft.category]
-  const canSave = completion.s && completion.m && completion.t
+  const canSave = completion.s && completion.m && completion.a && completion.r && completion.t
   const dueDateLabel = formatDate(draft.dueDate)
 
   if (saved) {

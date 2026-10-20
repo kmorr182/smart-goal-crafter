@@ -1,25 +1,27 @@
 import type { GoalDraft } from '../types/goal'
 import type { GoalRecommendation } from '../types/recommendation'
-import { CATEGORIES } from '../data/categories'
-import { buildGoalSentence } from './sentence'
+
+
+// What you write in recommendation.ts:
+const API_URL = import.meta.env.VITE_API_URL ?? ''
 
 /**
- * Reviews a goal draft and returns a polished sentence plus a couple of supporting goal ideas.
- * This is a placeholder — it does not call a real model. Swap the body of this function for an
- * actual API request (with a server-held key; see the architecture note in the plan) once
- * that's ready. The call signature (`GoalDraft` in, `Promise<GoalRecommendation>` out) is
- * designed to stay the same either way, so nothing calling this needs to change.
+ * Reviews a goal draft and returns a polished sentence plus supporting goal ideas, via the
+ * smart-goal-crafter-api service (a separate repo — see its README for the Claude call itself).
+ * `/api` is proxied to that service's dev server by vite.config.ts in local dev; production
+ * will need an equivalent rewrite once the API has a deployed home.
  */
 export async function requestGoalRecommendation(draft: GoalDraft): Promise<GoalRecommendation> {
-  // Simulated network latency so the loading state in the UI is exercised honestly.
-  await new Promise((resolve) => setTimeout(resolve, 900 + Math.random() * 500))
+  const response = await fetch(`${API_URL}/api/recommendations`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(draft),
+  })
 
-  const category = CATEGORIES[draft.category]
-
-  return {
-    // A real model would take this same plain-text sentence as input and hand back something
-    // better; the mock just reuses it verbatim so the flow has something honest to show.
-    polishedSentence: buildGoalSentence(draft),
-    supportingGoals: category.supportingGoalIdeas,
+  if (!response.ok) {
+    const body = await response.json().catch(() => null)
+    throw new Error(body?.error || `Request failed (${response.status})`)
   }
+
+  return response.json()
 }

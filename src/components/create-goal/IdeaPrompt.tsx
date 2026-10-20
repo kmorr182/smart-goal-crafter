@@ -29,7 +29,9 @@ export function IdeaPrompt({ value, onChange, onContinue }: IdeaPromptProps) {
       <div className={styles.kicker}>Start with a rough idea</div>
       <h1 className={styles.heading}>What do you want to work on?</h1>
       <p className={styles.lede}>
-        Type it however it comes to mind — vague is fine. You'll shape it into a real, specific goal below.
+         Vague is fine. 
+      <br />
+      You'll shape it into a more concrete plan below.
       </p>
       <div className={styles.row}>
         <Input
