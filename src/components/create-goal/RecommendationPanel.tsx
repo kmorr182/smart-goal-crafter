@@ -7,28 +7,26 @@ import styles from './RecommendationPanel.module.css'
 
 export interface RecommendationPanelProps {
   draft: GoalDraft
-  /** Disabled until the goal has enough content to be worth reviewing (mirrors Save's gate). */
+  /** Disabled until the goal has enough content for the API's validation to accept it. */
   disabled: boolean
 }
 
 /**
- * "Create recommendation": reviews the assembled goal sentence and suggests a couple of
- * smaller supporting goals. Currently backed by a mock (src/utils/recommendation.ts) rather
- * than a real model — see that file's comment for what swapping in a live API involves.
- *
- * The button itself is force-disabled below, ahead of that model actually being wired up —
- * `disabled` from the caller (the usual S/M/T completeness gate) is intentionally unused for
- * now. Once the feature is ready, drop the hardcoded `disabled` on the Button below and
- * destructure `disabled` here again.
+ * "Create recommendation": sends the assembled goal to smart-goal-crafter-api and shows back a
+ * polished sentence plus a couple of smaller supporting goals.
  */
-export function RecommendationPanel({ draft }: RecommendationPanelProps) {
+export function RecommendationPanel({ draft, disabled }: RecommendationPanelProps) {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<GoalRecommendation | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleClick() {
     setLoading(true)
+    setError(null)
     try {
       setResult(await requestGoalRecommendation(draft))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not get a recommendation right now.')
     } finally {
       setLoading(false)
     }
@@ -36,11 +34,11 @@ export function RecommendationPanel({ draft }: RecommendationPanelProps) {
 
   return (
     <div className={styles.wrap}>
-      <div title="Feature coming soon">
-        <Button variant="outline" fullWidth loading={loading} disabled onClick={handleClick}>
-          {result ? 'Review again' : 'Create recommendation'}
-        </Button>
-      </div>
+      <Button variant="outline" fullWidth loading={loading} disabled={disabled} onClick={handleClick}>
+        {result ? 'Review again' : 'Create recommendation'}
+      </Button>
+
+      {error && <p className={styles.error}>{error}</p>}
 
       {result && (
         <div className={styles.result}>
