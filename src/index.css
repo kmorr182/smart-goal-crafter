@@ -15,8 +15,14 @@ body {
   line-height: var(--ruk-line-height-normal);
 }
 
+/* Sticky-footer layout: #root fills at least one viewport, the page (flex: 1 in
+   CreateGoal.module.css) absorbs whatever space short content leaves over, and the footer
+   lands at the bottom of the screen instead of requiring a scroll past empty space to reach
+   it. Content taller than one viewport still grows #root past 100vh normally. */
 #root {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (prefers-reduced-motion: reduce) {

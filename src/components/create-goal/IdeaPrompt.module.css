@@ -1,78 +1,151 @@
 .hero {
-  text-align: center;
-  padding: 72px 0 40px;
+  /* The ruled-paper background itself lives on .page (CreateGoal.module.css), so it
+     continues past the hero instead of stopping here. */
+  position: relative;
+}
+
+/* Only applied before the flow starts (see IdeaPrompt.tsx) — fills exactly the space .page's
+   flex layout leaves above the footer, rather than a flat 100vh that would stack on top of
+   whatever's below it once the step list appears. */
+.fullScreen {
+  min-height: 100%;
+}
+
+.content {
+  position: relative;
+  max-width: 820px;
+  /* Clears the red margin rule, which is now drawn on .page's own background (CreateGoal.module.css)
+     so it runs the full height of the page instead of stopping at the bottom of this section. */
+  padding: 72px 32px 40px 68px;
 }
 
 .kicker {
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--ruk-color-primary);
-  margin-bottom: 14px;
+  font-family: var(--display-font-family);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--ruk-color-text-muted);
+  transform: rotate(-1deg);
+  margin: 0 0 14px;
 }
 
 .heading {
   font-family: var(--display-font-family);
-  font-size: clamp(2.4rem, 5.2vw, 3.6rem);
   font-weight: 400;
-  margin: 0 0 12px;
-  line-height: 1.1;
+  font-size: clamp(1.8rem, 4.4vw, 2.9rem);
+  line-height: 1.16;
+  margin: 0 0 30px;
+  max-width: 34ch;
   text-wrap: balance;
   color: var(--ruk-color-text);
 }
 
-.lede {
-  max-width: 46ch;
-  margin: 0 auto 32px;
-  color: var(--ruk-color-text);
-  font-size: 1.05rem;
-  font-family: var(--ruk-font-family);
-}
-
 .row {
   display: flex;
-  gap: 10px;
-  max-width: 640px;
-  margin: 0 auto 18px;
-}
-
-.row > :first-child {
-  flex: 1;
-  min-width: 0;
-}
-
-.chipRow {
-  display: flex;
+  align-items: baseline;
   flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
+  gap: 10px;
+  margin: 0 0 18px;
 }
 
-.chip {
+.lead {
   font-family: var(--ruk-font-family);
-  font-size: 0.82rem;
-  padding: 7px 14px;
-  border-radius: var(--ruk-radius-pill);
-  border: 1px solid var(--ruk-color-border);
-  background: var(--ruk-color-surface);
-  color: var(--ruk-color-text-muted);
-  cursor: pointer;
-  transition: all var(--ruk-transition-fast);
-}
-
-.chip:hover {
-  border-color: var(--ruk-color-border-hover);
+  font-size: 1.1rem;
   color: var(--ruk-color-text);
 }
 
-.chip:focus-visible {
+.input {
+  flex: 1 1 220px;
+  max-width: 420px;
+  min-width: 0;
+  font-family: var(--display-font-family);
+  font-style: italic;
+  font-size: 1.45rem;
+  color: var(--ruk-color-text);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--ruk-color-border);
+  padding: 0 2px 4px;
+}
+
+.input::placeholder {
+  color: var(--ruk-color-text-muted);
+  opacity: 1;
+}
+
+.input:focus-visible {
+  outline: none;
+  border-bottom-color: var(--ruk-color-primary);
+}
+
+.hint {
+  font-size: 0.82rem;
+  color: var(--ruk-color-text-muted);
+  margin: 0 0 28px;
+}
+
+.notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.note {
+  background: color-mix(in srgb, var(--note-color) 14%, white);
+  color: var(--note-color);
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12);
+  padding: 9px 13px;
+  font-family: var(--display-font-family);
+  font-style: italic;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform 140ms ease;
+}
+
+.note:nth-child(odd) {
+  transform: rotate(-2deg);
+}
+
+.note:nth-child(even) {
+  transform: rotate(2deg);
+}
+
+.note:hover {
+  transform: translateY(-2px);
+}
+
+.note:focus-visible {
   outline: none;
   box-shadow: 0 0 0 var(--ruk-focus-ring-width, 3px) var(--ruk-color-focus-ring);
 }
 
+/* The light-tint-background + saturated-text treatment above relies on --note-color being dark
+   enough to read as text on a near-white card. In dark mode that same dark color sits on a
+   dark card instead, which doesn't clear 4.5:1 — so this flips to the same solid-fill +
+   white-text pairing already proven for the category badge (see steps.css's --cat-* comment). */
+[data-ruk-theme='dark'] .note {
+  background: var(--note-color);
+  color: #fff;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 @media (max-width: 640px) {
-  .row {
-    flex-direction: column;
+  .content {
+    padding: 36px 20px 28px;
+  }
+
+  .stamp {
+    width: 68px;
+    height: 68px;
+    font-size: 0.78rem;
   }
 }

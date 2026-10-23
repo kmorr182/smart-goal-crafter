@@ -1,6 +1,6 @@
 import { Slider, TextArea } from 'serious-component-library'
-import { SmartStep } from './SmartStep'
-import { achievabilitySuggestion, confidenceLabel } from '../../utils/confidence'
+import { SmartStep } from '../SmartStep'
+import { achievabilitySuggestion, confidenceLabel } from '../../../utils/confidence'
 import styles from './StepAchievable.module.css'
 
 export interface StepAchievableProps {
@@ -19,8 +19,8 @@ export function StepAchievable({ confidence, onConfidenceChange, note, onNoteCha
       stepKey="a"
       title="Achievable"
       prompts={[
-        'How confident are you, given your time and resources?',
-        'What do you already have going for you — skills, support, past experience?',
+        'On a scale of 1-10, how confident are you, given your time and resources?',
+        'What do you already have going for you, skills, support, past experience?',
         "What's the most likely obstacle, and how would you handle it?",
       ]}
       filled={filled}

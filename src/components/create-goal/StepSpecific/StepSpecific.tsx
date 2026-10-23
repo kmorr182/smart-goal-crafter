@@ -1,6 +1,6 @@
 import { TextArea, Button } from 'serious-component-library'
-import { SmartStep } from './SmartStep'
-import type { CategoryInfo } from '../../data/categories'
+import { SmartStep } from '../SmartStep'
+import type { CategoryInfo } from '../../../data/categories'
 
 export interface StepSpecificProps {
   value: string
@@ -15,15 +15,15 @@ export function StepSpecific({ value, onChange, filled, category }: StepSpecific
       stepKey="s"
       title="Specific"
       prompts={[
-        'What exactly will you do — and where, or with whom?',
-        'What would someone watching you succeed actually see?',
-        'Is there a more specific version of this goal hiding underneath it?',
+        'What specific thing will you need to do?',
+        'Will you need anyone else\'s help?',
+        'Where will you need to do this?',
       ]}
       filled={filled}
       delayMs={0}
     >
       <TextArea
-        aria-label="What exactly will you do — and where, or with whom?"
+        aria-label="What specific thing will you need to do?"
         placeholder={`e.g. ${category.example.specific}`}
         value={value}
         onChange={(event) => onChange(event.target.value)}

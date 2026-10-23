@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react'
 import { IdeaPrompt } from '../components/create-goal/IdeaPrompt'
-import { StepSpecific } from '../components/create-goal/StepSpecific'
+import { StepSpecific } from '../components/create-goal/StepSpecific/StepSpecific'
 import { StepDivider } from '../components/create-goal/StepDivider'
-import { StepMeasurable } from '../components/create-goal/StepMeasurable'
-import { StepAchievable } from '../components/create-goal/StepAchievable'
-import { StepRelevant } from '../components/create-goal/StepRelevant'
-import { StepTimebound } from '../components/create-goal/StepTimebound'
+import { StepMeasurable } from '../components/create-goal/StepMeasurable/StepMeasurable'
+import { StepAchievable } from '../components/create-goal/StepAchievable/StepAchievable'
+import { StepRelevant } from '../components/create-goal/StepRelevant/StepRelevant'
+import { StepTimebound } from '../components/create-goal/StepTimebound/StepTimebound'
 import { GoalSentenceBar } from '../components/create-goal/GoalSentenceBar'
 import { GoalPreviewPanel } from '../components/create-goal/GoalPreviewPanel'
 import { StepProgressBar } from '../components/create-goal/StepProgressBar'
@@ -39,7 +39,7 @@ export function CreateGoal() {
       {started && <GoalSentenceBar draft={draft} completion={completion} />}
 
       <main className={[styles.page, started ? styles.withProgressBar : ''].filter(Boolean).join(' ')}>
-        <IdeaPrompt value={idea} onChange={setIdea} onContinue={handleContinue} />
+        <IdeaPrompt value={idea} onChange={setIdea} onContinue={handleContinue} started={started} />
 
         {started && (
           <div className={styles.builder} ref={builderRef}>

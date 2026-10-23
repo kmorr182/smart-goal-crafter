@@ -72,14 +72,14 @@ export const CATEGORIES: Record<CategoryKey, CategoryInfo> = {
     colorVar: 'var(--cat-learning)',
     keywords: ['learn', 'study', 'course', 'language', 'spanish', 'read', 'book', 'degree'],
     example: {
-      specific: 'Hold a 10-minute conversation in Spanish',
-      target: 20,
-      unit: 'lessons',
-      relevant: 'talk with family in their first language',
+      specific: 'Read 3 new books related to my goal',
+      target: 3,
+      unit: 'books',
+      relevant: 'broaden my knowledge of the subject',
     },
     supportingGoalIdeas: [
-      { title: 'Practice 10 minutes daily instead of long sessions', reason: 'Frequency beats duration for building a new skill.' },
-      { title: 'Find a conversation partner or tutor', reason: 'Real feedback accelerates progress far more than solo study.' },
+      { title: 'Dedicate 30 minutes of study time per day', reason: 'Develop a habit of studying.' },
+      { title: 'Join a club related to what you\'re studying', reason: 'Having support from like-minded friends can feed your motivation.' },
     ],
   },
   relationships: {

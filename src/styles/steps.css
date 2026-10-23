@@ -53,6 +53,14 @@
   --cat-learning: #2a5a96;
   --cat-relationships: #9c3f5c;
   --cat-personal: #4a6030;
+
+  /* The notebook paper look that runs the whole flow (CreateGoal.module.css's .page,
+     Footer.module.css's .footer) — a dark variant below, not the same-in-both-themes
+     treatment the category colors get above, since this *is* the page background rather
+     than a fill with its own fixed-contrast text painted on top of it. */
+  --paper-bg: #faf6ec;
+  --paper-rule: rgba(28, 54, 100, 0.07);
+  --paper-margin-rule: rgba(156, 63, 92, 0.35);
 }
 
 [data-ruk-theme='dark'] {
@@ -61,4 +69,10 @@
   --step-a-rgb: 192, 102, 178;
   --step-r-rgb: 176, 74, 160;
   --step-t-rgb: 158, 48, 140;
+
+  /* A dark, worn-journal paper rather than inverted-cream — reads as "paper at night"
+     instead of a jarring light patch dropped into an otherwise dark theme. */
+  --paper-bg: #211b14;
+  --paper-rule: rgba(255, 237, 210, 0.06);
+  --paper-margin-rule: rgba(224, 122, 155, 0.5);
 }

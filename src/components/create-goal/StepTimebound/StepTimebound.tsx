@@ -1,6 +1,6 @@
 import { Input } from 'serious-component-library'
-import { SmartStep } from './SmartStep'
-import { daysFromToday, todayIso } from '../../utils/date'
+import { SmartStep } from '../SmartStep'
+import { daysFromToday, todayIso } from '../../../utils/date'
 import styles from './StepTimebound.module.css'
 
 export interface StepTimeboundProps {
@@ -18,13 +18,16 @@ export function StepTimebound({ value, onChange, filled }: StepTimeboundProps) {
       title="Time-bound"
       prompts={[
         "What's your target date?",
-        'What would push you to pick a sooner date? A later one?',
-        "What's one point along the way you'd want to check in?",
+        'Would anything push you to pick a sooner date? A later one?',
+        "Can you imagine a good checkpoint between now and your due date?",
       ]}
       filled={filled}
       delayMs={240}
     >
       <div className={styles.row}>
+        <div>
+          I will complete this goal by
+        </div>
         <Input
           aria-label="Target date"
           type="date"
