@@ -1,7 +1,24 @@
 .page {
-  max-width: 1180px;
-  margin: 0 auto;
+  /* Grows to fill whatever space #root's flex layout (index.css) has left after the footer,
+     instead of forcing its own 100vh on top of the footer's height — that's what was pushing
+     the footer below the fold and leaving a blank gap on short (pre-Continue) content. */
+  flex: 1;
   padding: 0 28px 80px;
+  /* The notebook's ruled paper, carried for the whole flow (not just the opening prompt) so
+     the page never switches to a stark white background partway through — content columns
+     (stepList, the preview panel) still self-center via their own --content-max-width. Both
+     the horizontal rules and the red composition-book margin line live here, as background
+     layers, so they span the page's actual height instead of one fixed section's. */
+  background-color: var(--paper-bg);
+  background-image: linear-gradient(
+      90deg,
+      transparent 56px,
+      var(--paper-margin-rule) 56px,
+      var(--paper-margin-rule) 58px,
+      transparent 58px
+    ),
+    repeating-linear-gradient(to bottom, transparent, transparent 39px, var(--paper-rule) 39px, var(--paper-rule) 40px);
+  background-repeat: no-repeat, repeat;
 }
 
 /* Clears the fixed StepProgressBar at the bottom, plus breathing room above it, so the last
@@ -12,6 +29,9 @@
 
 .builder {
   padding: 8px 0 0;
+  /* Clears the sticky GoalSentenceBar when "Continue" scrolls this into view — its height is
+     mirrored onto this variable since it changes as the sentence wraps to more/fewer lines. */
+  scroll-margin-top: calc(var(--sentence-bar-height, 56px) + 16px);
   opacity: 0;
   transform: translateY(12px);
   animation: rise 420ms ease both;

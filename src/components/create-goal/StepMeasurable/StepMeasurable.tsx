@@ -1,8 +1,8 @@
 import { Input, Select, Button } from 'serious-component-library'
-import { SmartStep } from './SmartStep'
-import { UNIT_OPTIONS } from '../../data/categories'
-import { EMPTY_QUANTITY_METRIC, EMPTY_MILESTONE_METRIC } from '../../types/goal'
-import type { GoalMetric } from '../../types/goal'
+import { SmartStep } from '../SmartStep'
+import { UNIT_OPTIONS } from '../../../data/categories'
+import { EMPTY_QUANTITY_METRIC, EMPTY_MILESTONE_METRIC } from '../../../types/goal'
+import type { GoalMetric } from '../../../types/goal'
 import styles from './StepMeasurable.module.css'
 
 export interface StepMeasurableProps {
@@ -17,27 +17,26 @@ export function StepMeasurable({ metric, onChange, filled }: StepMeasurableProps
       stepKey="m"
       title="Measurable"
       prompts={[
-        "What number or outcome proves it's done?",
-        'How will you track progress along the way, not just at the end?',
-        "What would “good enough” look like versus your ideal outcome?",
+        "What is your milestone?",
+        'Are you starting from ground zero or do you have a head start?',
       ]}
       filled={filled}
       delayMs={60}
     >
       <div className={styles.modeRow}>
+         <Button
+          size="sm"
+          variant={metric.mode === 'milestone' ? 'primary' : 'outline'}
+          onClick={() => onChange(EMPTY_MILESTONE_METRIC)}
+        >
+          Single milestone
+        </Button>
         <Button
           size="sm"
           variant={metric.mode === 'quantity' ? 'primary' : 'outline'}
           onClick={() => onChange(EMPTY_QUANTITY_METRIC)}
         >
           Track a number
-        </Button>
-        <Button
-          size="sm"
-          variant={metric.mode === 'milestone' ? 'primary' : 'outline'}
-          onClick={() => onChange(EMPTY_MILESTONE_METRIC)}
-        >
-          Single milestone
         </Button>
       </div>
 

@@ -15,7 +15,7 @@ export function achievabilitySuggestion(value: number): string | null {
     return "That's a big stretch. Consider breaking this into 2–3 smaller goals you can build momentum with first."
   }
   if (value >= 9) {
-    return 'This sounds very achievable. Consider raising the bar — a bit more ambition could make it more rewarding.'
+    return 'This sounds very achievable. Consider raising the bar.'
   }
   return null
 }

@@ -37,7 +37,7 @@ export const EMPTY_GOAL_DRAFT: GoalDraft = {
   idea: '',
   category: 'personal',
   specific: '',
-  metric: EMPTY_QUANTITY_METRIC,
+  metric: EMPTY_MILESTONE_METRIC,
   confidence: 5,
   achievableNote: '',
   relevant: '',

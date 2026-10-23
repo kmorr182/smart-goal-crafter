@@ -1,10 +1,21 @@
 .footer {
-  max-width: 1180px;
-  margin: 0 auto;
   padding: 24px 28px 40px;
   text-align: center;
   font-family: var(--ruk-font-family);
   font-size: 0.78rem;
   color: var(--ruk-color-text-muted);
   border-top: 1px solid var(--ruk-color-border);
+  /* Matches CreateGoal.module.css's .page exactly — the footer sits outside .page in the DOM
+     (App.tsx renders it after the route), so without its own copy here the notebook paper
+     would stop dead at the bottom of the page and hand off to a plain white strip. */
+  background-color: var(--paper-bg);
+  background-image: linear-gradient(
+      90deg,
+      transparent 56px,
+      var(--paper-margin-rule) 56px,
+      var(--paper-margin-rule) 58px,
+      transparent 58px
+    ),
+    repeating-linear-gradient(to bottom, transparent, transparent 39px, var(--paper-rule) 39px, var(--paper-rule) 40px);
+  background-repeat: no-repeat, repeat;
 }
