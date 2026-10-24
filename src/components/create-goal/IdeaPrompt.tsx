@@ -40,7 +40,7 @@ export function IdeaPrompt({ value, onChange, onContinue, started }: IdeaPromptP
     <section className={[styles.hero, !started && styles.fullScreen].filter(Boolean).join(' ')}>
       <div className={styles.content}>
         <p className={styles.kicker}>Dear future me,</p>
-        <h2 className={styles.heading}>What are we wanting to accomplish?</h2>
+        <h2 className={styles.heading}>What are we wanting to accomplish at this point in our life?</h2>
         <form
           className={styles.row}
           onSubmit={(event) => {
