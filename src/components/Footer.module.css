@@ -19,3 +19,18 @@
     repeating-linear-gradient(to bottom, transparent, transparent 39px, var(--paper-rule) 39px, var(--paper-rule) 40px);
   background-repeat: no-repeat, repeat;
 }
+
+/* Matches the mobile override in CreateGoal.module.css's .page. Keeps the two consistent so
+   the line doesn't disappear everywhere else on a narrow screen and then reappear here. */
+@media (max-width: 640px) {
+  .footer {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 39px,
+      var(--paper-rule) 39px,
+      var(--paper-rule) 40px
+    );
+    background-repeat: repeat;
+  }
+}

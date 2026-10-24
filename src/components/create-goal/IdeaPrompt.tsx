@@ -49,27 +49,33 @@ export function IdeaPrompt({ value, onChange, onContinue, started }: IdeaPromptP
           }}
         >
           <span className={styles.lead}>I want to</span>
-          <label htmlFor="idea-input" className={styles.srOnly}>
-            Your rough idea
-          </label>
-          <input
-            id="idea-input"
-            type="text"
-            className={styles.input}
-            placeholder={IDEA_PLACEHOLDERS[placeholderIndex]}
-            value={value}
-            maxLength={120}
-            required
-            onChange={(event) => onChange(event.target.value)}
-            onFocus={() => {
-              focused.current = true
-            }}
-            onBlur={() => {
-              focused.current = false
-            }}
-          />
-          <span className={styles.lead}>.</span>
-          <Button type="submit" disabled={!canContinue}>Begin</Button>
+          {/* Grouped so the two wrap together. Without this, narrow screens could wrap just
+              the button onto its own line, where it reads like one of the idea chips below
+              rather than the submit action for the sentence above it. */}
+          <div className={styles.inputRow}>
+            <label htmlFor="idea-input" className={styles.srOnly}>
+              Your rough idea
+            </label>
+            <input
+              id="idea-input"
+              type="text"
+              className={styles.input}
+              placeholder={IDEA_PLACEHOLDERS[placeholderIndex]}
+              value={value}
+              maxLength={120}
+              required
+              onChange={(event) => onChange(event.target.value)}
+              onFocus={() => {
+                focused.current = true
+              }}
+              onBlur={() => {
+                focused.current = false
+              }}
+            />
+            <Button type="submit" disabled={!canContinue}>
+              Begin
+            </Button>
+          </div>
         </form>
 
         <div className={styles.notes}>

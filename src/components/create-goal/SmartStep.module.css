@@ -7,23 +7,30 @@
 
 .head {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  align-items: center;
+  gap: 16px;
   margin-bottom: 4px;
 }
 
-.letter {
+/* Sized to exactly the badge, so the pinned note below can be absolutely positioned against
+   it without taking any space in the flow, filling a step never shifts the title, prompt, or
+   field after it. */
+.badgeWrap {
+  position: relative;
   flex-shrink: 0;
-  width: 34px;
-  height: 34px;
-  border-radius: 9px;
+}
+
+.letter {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.5rem;
   font-family: var(--ruk-font-family);
-  background: rgba(var(--step-rgb), 0.12);
+  background: var(--ruk-color-surface);
   color: rgb(var(--step-rgb));
   border: 1.5px solid rgba(var(--step-rgb), 0.4);
   transition: all 160ms ease;
@@ -37,6 +44,47 @@
 
 .letter.pulse {
   animation: step-pop 520ms ease;
+}
+
+/* Stuck onto the badge's bottom edge, centered and out of the flow, so it never shifts anything
+   else. */
+.pin {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+.tape {
+  width: 36px;
+  height: 13px;
+  margin: 0 auto -5px;
+  /* Fixed, not tied to --step-rgb. A standard white tape reads clearly
+     against all five badge colors, and against both the light and dark paper. */
+  background: rgba(255,255,255, 0.5);
+  border-radius: 2px;
+  transform: rotate(-8deg);
+  position: relative;
+  z-index: 2;
+}
+
+.note {
+  width: fit-content;
+  background: color-mix(in srgb, rgb(var(--step-rgb)) 14%, var(--ruk-color-surface));
+  border-radius: 3px;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.16);
+  padding: 5px 10px;
+  transform: rotate(-4deg);
+  position: relative;
+  z-index: 1;
+  font-family: var(--display-font-family);
+  font-style: italic;
+  font-size: 0.8rem;
+  /* Not tied to --step-rgb, depending on theme. The background keeps its step-color tint; the text reads
+     with the theme's own text color so all five pass a11y standards in both themes. */
+  color: var(--ruk-color-text);
+  white-space: nowrap;
 }
 
 .titleRow {
@@ -59,12 +107,12 @@
   font-size: 0.84rem;
   color: var(--ruk-color-text);
   font-family: var(--ruk-font-family);
-  margin: 3px 0 0 46px;
+  margin: 6px 0 0 68px;
 }
 
 .subPrompts {
   list-style: none;
-  margin: 6px 0 0 46px;
+  margin: 6px 0 0 68px;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -87,7 +135,7 @@
 }
 
 .body {
-  margin-left: 46px;
+  margin-left: 68px;
   margin-top: 14px;
 }
 

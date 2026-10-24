@@ -13,6 +13,9 @@ export interface StepAchievableProps {
 
 export function StepAchievable({ confidence, onConfidenceChange, note, onNoteChange, filled }: StepAchievableProps) {
   const suggestion = achievabilitySuggestion(confidence)
+  // Mirrors the suggestion Alert's own thresholds. The note should never celebrate "doable!"
+  // whenever the Alert underneath it is suggesting the opposite.
+  const noteText = confidence <= 3 ? 'big stretch!' : confidence >= 9 ? 'raise the bar?' : undefined
 
   return (
     <SmartStep
@@ -24,6 +27,7 @@ export function StepAchievable({ confidence, onConfidenceChange, note, onNoteCha
         "What's the most likely obstacle, and how would you handle it?",
       ]}
       filled={filled}
+      noteText={noteText}
       delayMs={120}
     >
       <Slider
