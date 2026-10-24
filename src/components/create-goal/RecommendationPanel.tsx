@@ -9,13 +9,16 @@ export interface RecommendationPanelProps {
   draft: GoalDraft
   /** Disabled until the goal has enough content for the API's validation to accept it. */
   disabled: boolean
+  /** Fired with the polished sentence whenever a new recommendation comes back, so Share can
+   * offer it instead of the plain assembled sentence. */
+  onRecommendation?: (result: GoalRecommendation) => void
 }
 
 /**
  * "Create recommendation": sends the assembled goal to smart-goal-crafter-api and shows back a
  * polished sentence plus a couple of smaller supporting goals.
  */
-export function RecommendationPanel({ draft, disabled }: RecommendationPanelProps) {
+export function RecommendationPanel({ draft, disabled, onRecommendation }: RecommendationPanelProps) {
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<GoalRecommendation | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -24,7 +27,9 @@ export function RecommendationPanel({ draft, disabled }: RecommendationPanelProp
     setLoading(true)
     setError(null)
     try {
-      setResult(await requestGoalRecommendation(draft))
+      const recommendation = await requestGoalRecommendation(draft)
+      setResult(recommendation)
+      onRecommendation?.(recommendation)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not get a recommendation right now.')
     } finally {
@@ -34,7 +39,7 @@ export function RecommendationPanel({ draft, disabled }: RecommendationPanelProp
 
   return (
     <div className={styles.wrap}>
-      <Button variant="outline" fullWidth loading={loading} disabled={disabled} onClick={handleClick}>
+      <Button fullWidth loading={loading} disabled={disabled} onClick={handleClick}>
         {result ? 'Review again' : 'Create recommendation'}
       </Button>
 

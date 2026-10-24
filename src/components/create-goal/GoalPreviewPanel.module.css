@@ -124,11 +124,6 @@
   color: rgb(var(--step-rgb));
 }
 
-.saveButton {
-  width: 100%;
-  justify-content: center;
-}
-
 .successView {
   text-align: center;
 }

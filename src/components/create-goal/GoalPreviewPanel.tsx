@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { CSSProperties } from 'react'
 import { Button } from 'serious-component-library'
 import type { GoalDraft, GoalMetric, StepCompletion, StepKey } from '../../types/goal'
@@ -53,6 +54,7 @@ export function GoalPreviewPanel({ draft, completion, saved, onSave, onEdit }: G
   const category = CATEGORIES[draft.category]
   const canSave = completion.s && completion.m && completion.a && completion.r && completion.t
   const dueDateLabel = formatDate(draft.dueDate)
+  const [polishedSentence, setPolishedSentence] = useState<string | null>(null)
 
   if (saved) {
     return (
@@ -101,7 +103,11 @@ export function GoalPreviewPanel({ draft, completion, saved, onSave, onEdit }: G
         <GoalSentence draft={draft} completion={completion} />
       </div>
 
-      <RecommendationPanel draft={draft} disabled={!canSave} />
+      <RecommendationPanel
+        draft={draft}
+        disabled={!canSave}
+        onRecommendation={(result) => setPolishedSentence(result.polishedSentence)}
+      />
 
       <div className={styles.rationale}>
         {completion.a && (
@@ -115,11 +121,11 @@ export function GoalPreviewPanel({ draft, completion, saved, onSave, onEdit }: G
         )}
       </div>
 
-      <ShareGoal draft={draft} disabled={!canSave} />
-
-      <Button className={styles.saveButton} disabled={!canSave} onClick={onSave}>
-        Save this goal
-      </Button>
+      <ShareGoal draft={draft} disabled={!canSave} polishedSentence={polishedSentence}>
+        <Button variant="outline" size="sm" disabled={!canSave} onClick={onSave}>
+          Save this goal
+        </Button>
+      </ShareGoal>
     </div>
   )
 }
