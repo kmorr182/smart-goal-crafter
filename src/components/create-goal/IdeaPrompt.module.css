@@ -53,6 +53,14 @@
   color: var(--ruk-color-text);
 }
 
+/* Input + Begin as one flex item of .row. When .row wraps, this group wraps as a whole onto
+   its own line (below "I want to") instead of the button splitting off onto a line by itself. */
+.inputRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
 .input {
   flex: 1 1 220px;
   max-width: 420px;
@@ -141,11 +149,5 @@
 @media (max-width: 640px) {
   .content {
     padding: 36px 20px 28px;
-  }
-
-  .stamp {
-    width: 68px;
-    height: 68px;
-    font-size: 0.78rem;
   }
 }

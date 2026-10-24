@@ -21,6 +21,24 @@
   background-repeat: no-repeat, repeat;
 }
 
+/* The margin rule sits at a fixed 56px from the page edge, but content's own left inset
+   shrinks on narrow screens (IdeaPrompt's padding, SmartStep's prompt/body reset). Below
+   640px that content starts to the left of the line instead of being cleared by it, so the
+   rule would run through the text instead of framing it. Drop it here rather than chase a
+   moving target across every component's own breakpoint. */
+@media (max-width: 640px) {
+  .page {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 39px,
+      var(--paper-rule) 39px,
+      var(--paper-rule) 40px
+    );
+    background-repeat: repeat;
+  }
+}
+
 /* Clears the fixed StepProgressBar at the bottom, plus breathing room above it, so the last
    step and the footer aren't hidden underneath it. */
 .page.withProgressBar {
