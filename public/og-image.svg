@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="rules" width="1200" height="40" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="39.5" x2="1200" y2="39.5" stroke="rgba(28,54,100,0.08)" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Notebook paper, matching the app's own page background -->
+  <rect width="1200" height="630" fill="#faf6ec"/>
+  <rect width="1200" height="630" fill="url(#rules)"/>
+  <line x1="96" y1="0" x2="96" y2="630" stroke="rgba(156,63,92,0.55)" stroke-width="3"/>
+
+  <!-- Headline + subtitle. System-font fallbacks only (Georgia / Arial) rather than the app's
+       Google-hosted Instrument Serif / Karla — social-share crawlers generally don't fetch
+       external @font-face resources when rasterizing a shared link's image. -->
+  <text x="150" y="270" font-family="Georgia, 'Times New Roman', serif" font-size="90" fill="#0f172a">SMART Goal</text>
+  <text x="150" y="370" font-family="Georgia, 'Times New Roman', serif" font-size="90" fill="#0f172a">Crafter</text>
+  <text x="150" y="430" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#64748b">Turn a rough idea into one well-formed SMART goal.</text>
+
+  <!-- Pinned sticky-note accent, matching the favicon and the app's own "filled step" notes -->
+  <g transform="rotate(-7 970 190)">
+    <rect x="855" y="85" width="230" height="210" rx="14" fill="#9e448a"/>
+    <path d="M1085,235 L1085,295 L1025,295 Z" fill="#5c144e"/>
+    <text x="970" y="200" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="40" fill="#ffffff">S M A R T</text>
+  </g>
+  <g transform="rotate(4 970 95)">
+    <rect x="885" y="77" width="170" height="36" rx="2" fill="#ffffff" opacity="0.6"/>
+  </g>
+</svg>
