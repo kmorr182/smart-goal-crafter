@@ -28,7 +28,7 @@ const LEAD_IN = "I'm challenging myself:"
  * share-sheet title, neither of which apply here since there's no shareable URL per goal yet
  * (no backend to persist one against). */
 function withAttribution(message: string): string {
-  return `${message}\n\n— made with Smart Goal Crafter · ${SITE_URL}`
+  return `${message}\n\n— made with SMART Goal Crafter · ${SITE_URL}`
 }
 
 /** Lets the user send the finished goal via their own email client, X, or a plain copy — no account, no backend. */
