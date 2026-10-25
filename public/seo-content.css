@@ -1,0 +1,135 @@
+/* Styles for index.html's static .seo-content section only. Deliberately plain CSS, not a
+   CSS Module, since this markup lives outside #root and has to work with zero JavaScript
+   (including HtmlThemeSync, which needs JS to set data-ruk-theme, so dark mode here follows
+   prefers-color-scheme directly instead of the app's own toggle). Colors are hardcoded to match
+   steps.css's --paper-bg/--step-*-rgb tokens rather than referencing them, for the same reason. */
+
+.seo-content {
+  background-color: #faf6ec;
+  border-top: 1px solid rgba(28, 54, 100, 0.12);
+  padding: 56px 28px 72px;
+}
+
+.seo-content-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  font-family: 'Karla', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: #0f172a;
+  line-height: 1.6;
+}
+
+.seo-content h1,
+.seo-content h2 {
+  font-family: 'Instrument Serif', serif;
+  font-weight: 400;
+  margin: 40px 0 14px;
+}
+
+.seo-content h1 {
+  font-size: 2.4rem;
+}
+
+.seo-content h2 {
+  font-size: 1.9rem;
+}
+
+.seo-content h1:first-child,
+.seo-content h2:first-child {
+  margin-top: 0;
+}
+
+.back-link,
+.cta {
+  font-family: 'Karla', sans-serif;
+}
+
+.back-link a,
+.cta a {
+  color: rgb(140, 48, 118);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.back-link a:hover,
+.cta a:hover {
+  text-decoration: underline;
+}
+
+.cta {
+  margin-top: 40px;
+  font-size: 1.1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .back-link a,
+  .cta a {
+    color: rgb(192, 102, 178);
+  }
+}
+
+.seo-content h3 {
+  font-family: 'Karla', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 24px 0 6px;
+}
+
+.seo-content p {
+  margin: 0 0 10px;
+  color: #334155;
+}
+
+.smart-defs {
+  margin: 18px 0 0;
+  display: grid;
+  gap: 12px;
+}
+
+.smart-defs > div {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  border-left: 3px solid rgb(140, 48, 118);
+  padding-left: 14px;
+}
+
+.smart-defs dt {
+  flex: 0 0 110px;
+  font-weight: 700;
+  color: rgb(140, 48, 118);
+}
+
+.smart-defs dd {
+  margin: 0;
+  color: #334155;
+}
+
+@media (max-width: 560px) {
+  .smart-defs dt {
+    flex-basis: 90px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .seo-content {
+    background-color: #211b14;
+    border-top-color: rgba(255, 237, 210, 0.1);
+  }
+
+  .seo-content-inner {
+    color: #f1f5f9;
+  }
+
+  .seo-content p,
+  .smart-defs dd {
+    color: #cbd5e1;
+  }
+
+  .smart-defs > div {
+    border-left-color: rgb(192, 102, 178);
+  }
+
+  .smart-defs dt {
+    color: rgb(192, 102, 178);
+  }
+}

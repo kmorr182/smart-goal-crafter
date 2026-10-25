@@ -75,7 +75,7 @@ export function SmartStep({ stepKey, title, prompts, filled, actions, noteText, 
           )}
         </div>
         <div className={styles.titleRow}>
-          <div className={styles.title}>{title}</div>
+          <h2 className={styles.title}>{title}</h2>
           {actions}
         </div>
       </div>
