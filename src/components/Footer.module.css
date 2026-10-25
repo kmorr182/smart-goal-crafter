@@ -20,6 +20,18 @@
   background-repeat: no-repeat, repeat;
 }
 
+.faqLink {
+  display: inline-block;
+  margin-top: 10px;
+  color: var(--ruk-color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.faqLink:hover {
+  color: var(--ruk-color-text);
+}
+
 /* Matches the mobile override in CreateGoal.module.css's .page. Keeps the two consistent so
    the line doesn't disappear everywhere else on a narrow screen and then reappear here. */
 @media (max-width: 640px) {

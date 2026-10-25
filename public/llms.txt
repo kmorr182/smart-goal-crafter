@@ -1,0 +1,25 @@
+# SMART Goal Crafter
+
+> A free, no-account web tool that turns a rough idea ("learn Spanish," "get healthier") into a
+> well-formed SMART goal, Specific, Measurable, Achievable, Relevant, and Time-bound, through a
+> short guided, conversational flow.
+
+SMART Goal Crafter walks a person through five short steps, one per letter of SMART, each with its
+own guiding questions. The result is a single finished goal sentence in the form "In order to
+[relevant], I will [specific], measured by [measurable], by [time-bound]," with an achievability
+check (a 1-10 confidence rating that nudges you if the goal looks too easy or too big a stretch).
+Finished goals can be saved locally, shared by email or on X, or copied as plain text. There is no
+account, no sign-up, and no cost.
+
+## Key facts
+
+- What SMART stands for: Specific, Measurable, Achievable, Relevant, Time-bound.
+- Free, no account required.
+- Works in any modern browser, nothing to install.
+- Primary URL: https://smartgoalcrafter.com/
+
+## Pages
+
+- [Home](https://smartgoalcrafter.com/): the goal-creation flow itself.
+- [What is a SMART goal? (FAQ)](https://smartgoalcrafter.com/faq/): the SMART framework explained,
+  letter by letter, plus answers to common questions about the tool.
