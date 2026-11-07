@@ -20,16 +20,26 @@
   background-repeat: no-repeat, repeat;
 }
 
-.faqLink {
-  display: inline-block;
+.links {
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.link {
   color: var(--ruk-color-text-muted);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.faqLink:hover {
+.link:hover {
   color: var(--ruk-color-text);
+}
+
+.divider {
+  color: var(--ruk-color-border);
 }
 
 /* Matches the mobile override in CreateGoal.module.css's .page. Keeps the two consistent so
