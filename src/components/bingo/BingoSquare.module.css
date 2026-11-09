@@ -1,0 +1,132 @@
+/* The FREE tile and the category fills (--tile-color, via color-mix below) stay hardcoded —
+   see the plan for why. Everything else (muted text, borders, focus rings) uses the app's
+   shared --ruk-* tokens so it doesn't go unreadable in dark mode, which the --ruk-* tokens
+   already account for and a hardcoded copy would not. */
+
+.free,
+.empty,
+.filled {
+  width: 100%;
+  height: 84px;
+  border-radius: 8px;
+  font-family: 'Karla', system-ui, sans-serif;
+  box-sizing: border-box;
+}
+
+.free {
+  position: relative;
+  background: #1c3664;
+  transform: rotate(-3deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.freeLabel {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #fff;
+}
+
+.empty {
+  border: 1.5px dashed var(--ruk-color-border);
+  background: transparent;
+  color: var(--ruk-color-text-muted);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px;
+  font-size: 11px;
+  transition: border-color 140ms ease, color 140ms ease;
+}
+
+.empty:hover {
+  border-color: var(--ruk-color-border-hover);
+  color: var(--ruk-color-text);
+}
+
+.empty:focus-visible,
+.filled:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ruk-color-focus-ring);
+}
+
+.filled {
+  position: relative;
+  border: none;
+  /* 10%, not a more visible-looking 18%+ — at the darker/less-saturated end of the category
+     palette (finance, health), a stronger mix pushes the label's text-on-fill contrast below
+     4.5:1. 10% clears that for every category with margin to spare. */
+  background: color-mix(in srgb, var(--tile-color, #94a3b8) 10%, white);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1);
+  cursor: pointer;
+  padding: 10px;
+  text-align: left;
+  display: flex;
+  align-items: flex-end;
+  transition: transform 140ms ease, background 140ms ease;
+}
+
+.filled:hover {
+  transform: translateY(-2px);
+}
+
+.filled.completed {
+  background: color-mix(in srgb, var(--tile-color, #1c3664) 75%, black);
+}
+
+.label {
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.25;
+  color: var(--tile-color, #1c3664);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.filled.completed .label {
+  color: #fff;
+}
+
+.check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty.selected,
+.filled.selected {
+  box-shadow: 0 0 0 3px var(--ruk-color-focus-ring);
+}
+
+@media (max-width: 640px) {
+  .free,
+  .empty,
+  .filled {
+    height: 64px;
+    border-radius: 6px;
+  }
+
+  .label {
+    font-size: 10px;
+  }
+
+  .empty span {
+    font-size: 10px;
+  }
+}

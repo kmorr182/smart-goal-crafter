@@ -55,7 +55,7 @@ export const CATEGORIES: Record<CategoryKey, CategoryInfo> = {
   finance: {
     label: 'Finance',
     colorVar: 'var(--cat-finance)',
-    keywords: ['money', 'save', 'saving', 'debt', 'budget', 'invest', 'financ', 'house', 'pay off'],
+    keywords: ['money', 'save', 'saving', 'debt', 'budget', 'invest', 'financ', 'pay off'],
     example: {
       specific: 'Save $5,000 toward a house down payment',
       target: 5000,
@@ -100,7 +100,7 @@ export const CATEGORIES: Record<CategoryKey, CategoryInfo> = {
   personal: {
     label: 'Personal',
     colorVar: 'var(--cat-personal)',
-    keywords: [],
+    keywords: ['myself', 'personal', 'hobby', 'journal', 'declutter', 'habit'],
     example: {
       specific: 'Read 12 books this year',
       target: 12,
@@ -112,16 +112,69 @@ export const CATEGORIES: Record<CategoryKey, CategoryInfo> = {
       { title: 'Set a small weekly check-in with yourself', reason: 'A short regular reflection keeps the goal from quietly slipping.' },
     ],
   },
+  spiritual: {
+    label: 'Spiritual',
+    colorVar: 'var(--cat-spiritual)',
+    keywords: [
+      'bible',
+      'pray',
+      'prayer',
+      'meditate',
+      'meditation',
+      'faith',
+      'church',
+      'worship',
+      'spiritual',
+      'quran',
+      'koran',
+      'torah',
+      'talmud',
+      'bhagavad gita',
+      'vedas',
+      'upanishads',
+      'sutra',
+      'tripitaka',
+      'guru granth sahib',
+      'tao te ching',
+      'book of mormon',
+    ],
+    example: {
+      specific: 'Read through the Bible in a year',
+      target: 365,
+      unit: 'days',
+      relevant: 'grow closer to my faith',
+    },
+    supportingGoalIdeas: [
+      { title: 'Set a consistent time of day to practice', reason: 'Same time, same place makes it a habit instead of a hope.' },
+      { title: 'Find a group or community doing the same thing', reason: 'Shared practice tends to outlast solo willpower.' },
+    ],
+  },
+  uncategorized: {
+    label: 'Uncategorized',
+    colorVar: 'var(--cat-uncategorized)',
+    // No keywords — this is the fallback detectCategory() returns when nothing else matches.
+    keywords: [],
+    example: {
+      specific: 'Finish a goal I have been putting off',
+      target: 1,
+      unit: 'sessions',
+      relevant: 'make progress on something that matters to me',
+    },
+    supportingGoalIdeas: [
+      { title: 'Give it a category once you know it better', reason: 'A quick re-read later often makes the right bucket obvious.' },
+      { title: 'Break it into one small next step', reason: "Uncategorized goals often just mean it hasn't been pinned down yet." },
+    ],
+  },
 }
 
-/** Idea → category, by keyword match. Falls back to 'personal' when nothing matches. */
+/** Idea → category, by keyword match. Falls back to 'uncategorized' when nothing matches. */
 export function detectCategory(idea: string): CategoryKey {
   const text = idea.toLowerCase()
   for (const key of Object.keys(CATEGORIES) as CategoryKey[]) {
-    if (key === 'personal') continue
+    if (key === 'uncategorized') continue
     if (CATEGORIES[key].keywords.some((kw) => text.includes(kw))) return key
   }
-  return 'personal'
+  return 'uncategorized'
 }
 
 export const IDEA_CHIPS = ['Get in shape', 'Save for a house', 'Learn Spanish', 'Get a promotion', 'Read more books']
