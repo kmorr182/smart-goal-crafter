@@ -1,4 +1,4 @@
-export type CategoryKey = 'health' | 'career' | 'finance' | 'learning' | 'relationships' | 'personal'
+export type CategoryKey = 'health' | 'career' | 'finance' | 'learning' | 'relationships' | 'personal' | 'spiritual' | 'uncategorized'
 
 /**
  * The Measurable piece of a SMART goal — either a running number ('quantity': a target, a
@@ -35,7 +35,7 @@ export interface GoalDraft {
 
 export const EMPTY_GOAL_DRAFT: GoalDraft = {
   idea: '',
-  category: 'personal',
+  category: 'uncategorized',
   specific: '',
   metric: EMPTY_MILESTONE_METRIC,
   confidence: 5,

@@ -53,6 +53,8 @@
   --cat-learning: #2a5a96;
   --cat-relationships: #9c3f5c;
   --cat-personal: #4a6030;
+  --cat-spiritual: #433d7a;
+  --cat-uncategorized: #4b5563;
 
   /* The notebook paper look that runs the whole flow (CreateGoal.module.css's .page,
      Footer.module.css's .footer) — a dark variant below, not the same-in-both-themes
