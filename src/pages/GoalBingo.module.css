@@ -46,6 +46,23 @@
   max-width: 48ch;
 }
 
+.statusText {
+  font-family: 'Karla', sans-serif;
+  font-size: 14px;
+  color: var(--ruk-color-text-muted);
+}
+
+.saveError {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  font-family: 'Karla', sans-serif;
+  font-size: 13px;
+  color: #b91c1c;
+}
+
 .controls {
   display: flex;
   align-items: center;

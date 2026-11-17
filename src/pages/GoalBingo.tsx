@@ -1,13 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ToggleSwitch } from 'serious-component-library'
 import { BingoSquare } from '../components/bingo/BingoSquare'
 import { SettingsButton } from '../components/SettingsButton'
 import { CATEGORIES, detectCategory } from '../data/categories'
+import { getClientId } from '../lib/clientId'
 import { getOrCreateCard, setHasFreeSpace, setSquareLabel, toggleSquareCompleted } from '../lib/bingoCardRepository'
 import { FREE_POSITION } from '../types/bingoCard'
+import type { BingoCard } from '../types/bingoCard'
 import styles from './GoalBingo.module.css'
 
-// Hardcoded, not the shared --step-*-rgb tokens in steps.css 
+// Hardcoded, not the shared --step-*-rgb tokens in steps.css
 // This page is self-contained for now.
 // Need to pull out hard coded colors into shared theme file
 const LETTERS = [
@@ -18,11 +20,62 @@ const LETTERS = [
   { char: 'O', color: 'rgb(92,20,78)' },
 ]
 
+function errorMessage(err: unknown): string {
+  return err instanceof Error ? err.message : 'Something went wrong'
+}
+
 export function GoalBingo() {
-  const [card, setCard] = useState(() => getOrCreateCard())
+  const [clientId] = useState(() => getClientId())
+  const [card, setCard] = useState<BingoCard | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null)
   const [isEditingLabel, setIsEditingLabel] = useState(false)
   const [draft, setDraft] = useState('')
+
+  useEffect(() => {
+    let cancelled = false
+    getOrCreateCard(clientId)
+      .then((loaded) => {
+        if (!cancelled) setCard(loaded)
+      })
+      .catch((err) => {
+        if (!cancelled) setLoadError(errorMessage(err))
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [clientId])
+
+  if (isLoading) {
+    return (
+      <>
+        <SettingsButton />
+        <main className={styles.page}>
+          <div className={styles.inner}>
+            <p className={styles.statusText}>Loading your card…</p>
+          </div>
+        </main>
+      </>
+    )
+  }
+
+  if (loadError || !card) {
+    return (
+      <>
+        <SettingsButton />
+        <main className={styles.page}>
+          <div className={styles.inner}>
+            <p className={styles.statusText}>{loadError ?? 'Something went wrong loading your card.'}</p>
+          </div>
+        </main>
+      </>
+    )
+  }
 
   // Category is derived from the label, not stored, so it can never drift out of sync with
   // what's actually typed in the square. Uses the CATEGORIES/detectCategory
@@ -38,16 +91,29 @@ export function GoalBingo() {
   const selectedSquare = selectedPosition !== null ? squares.find((sq) => sq.position === selectedPosition) ?? null : null
   const isDirty = isEditingLabel && selectedSquare !== null && draft.trim() !== selectedSquare.label
 
-  function commitDraft() {
-    if (selectedPosition !== null) {
-      setCard(setSquareLabel(selectedPosition, draft.trim()))
+  // Returns whether the commit actually succeeded (or there was nothing to commit), so callers
+  // can tell a real failure apart from success instead of barreling ahead either way — a failed
+  // save here used to get silently treated the same as a successful one.
+  async function commitDraft(): Promise<boolean> {
+    if (!card || selectedPosition === null) return true
+    try {
+      const updated = await setSquareLabel(clientId, card, selectedPosition, draft.trim())
+      setCard(updated)
+      setSaveError(null)
+      return true
+    } catch (err) {
+      setSaveError(errorMessage(err))
+      return false
     }
   }
 
-  // Native confirm is the explicit "ask before losing changes" step. No auto-save.
-  function selectPosition(position: number | null) {
-    if (isDirty && window.confirm('Save your changes to this square?')) {
-      commitDraft()
+  // Native confirm is the explicit "ask before losing changes" step. No auto-save. If the save
+  // itself fails, stay put instead of switching away — otherwise the unsaved text would be
+  // silently discarded along with the failed save, with only a page-level error banner as a clue.
+  async function selectPosition(position: number | null) {
+    if (isDirty) {
+      const shouldSave = window.confirm('Save your changes to this square?')
+      if (shouldSave && !(await commitDraft())) return
     }
     setSelectedPosition(position)
     const sq = position !== null ? squares.find((s) => s.position === position) : null
@@ -57,15 +123,33 @@ export function GoalBingo() {
     setIsEditingLabel(sq ? sq.label === '' : false)
   }
 
-  function handleSave() {
-    commitDraft()
-    setIsEditingLabel(false)
+  // Only leave edit mode on an actual successful save — otherwise a failed save would show the
+  // stale label as if nothing were wrong, with the draft hidden behind one more click to retry.
+  async function handleSave() {
+    if (await commitDraft()) setIsEditingLabel(false)
   }
 
-  function handleMarkFinished() {
-    if (selectedPosition !== null) {
-      setCard(toggleSquareCompleted(selectedPosition))
+  async function handleMarkFinished() {
+    if (!card || selectedPosition === null) return
+    try {
+      const updated = await toggleSquareCompleted(clientId, card, selectedPosition)
+      setCard(updated)
+      setSaveError(null)
+    } catch (err) {
+      setSaveError(errorMessage(err))
     }
+  }
+
+  async function handleFreeSpaceChange(checked: boolean) {
+    if (!card) return
+    try {
+      const updated = await setHasFreeSpace(clientId, card, checked)
+      setCard(updated)
+      setSaveError(null)
+    } catch (err) {
+      setSaveError(errorMessage(err))
+    }
+    if (selectedPosition === FREE_POSITION) await selectPosition(null)
   }
 
   return (
@@ -79,6 +163,8 @@ export function GoalBingo() {
           Every square is a goal. Fill one in, then mark it off the moment you finish it.
         </p>
 
+        {saveError && <p className={styles.saveError}>{saveError}</p>}
+
         <div className={styles.controls}>
           <ToggleSwitch
             label="Include a free space"
@@ -86,8 +172,7 @@ export function GoalBingo() {
             showIcons={false}
             checked={card.hasFreeSpace}
             onChange={(event) => {
-              setCard(setHasFreeSpace(event.target.checked))
-              if (selectedPosition === FREE_POSITION) selectPosition(null)
+              void handleFreeSpaceChange(event.target.checked)
             }}
           />
         </div>
@@ -109,7 +194,9 @@ export function GoalBingo() {
               completed={sq.completed}
               isSelected={selectedPosition === sq.position}
               categoryColorVar={sq.category ? CATEGORIES[sq.category].colorVar : undefined}
-              onSelect={() => selectPosition(selectedPosition === sq.position ? null : sq.position)}
+              onSelect={() => {
+                void selectPosition(selectedPosition === sq.position ? null : sq.position)
+              }}
             />
           ))}
         </div>
@@ -124,7 +211,14 @@ export function GoalBingo() {
       {selectedSquare && (
         <div className={styles.actionBarWrap}>
           <div className={styles.actionBar}>
-            <button type="button" className={styles.actionBarClose} aria-label="Close" onClick={() => selectPosition(null)}>
+            <button
+              type="button"
+              className={styles.actionBarClose}
+              aria-label="Close"
+              onClick={() => {
+                void selectPosition(null)
+              }}
+            >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1c3664" strokeWidth="2.5" aria-hidden="true">
                 <path d="M6 6l12 12M18 6 6 18" />
               </svg>
@@ -154,12 +248,12 @@ export function GoalBingo() {
 
             <div className={styles.actionBarButtons}>
               {isEditingLabel && (
-                <button type="button" onClick={handleSave} disabled={draft.trim() === selectedSquare.label}>
+                <button type="button" onClick={() => void handleSave()} disabled={draft.trim() === selectedSquare.label}>
                   Save
                 </button>
               )}
               {selectedSquare.label && (
-                <button type="button" onClick={handleMarkFinished}>
+                <button type="button" onClick={() => void handleMarkFinished()}>
                   {selectedSquare.completed ? 'Mark as not finished' : 'Mark as finished'}
                 </button>
               )}
