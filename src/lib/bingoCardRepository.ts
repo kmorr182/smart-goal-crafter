@@ -1,46 +1,40 @@
 import type { BingoCard } from '../types/bingoCard'
 import { FREE_POSITION, emptySquares } from '../types/bingoCard'
-import { readJson, writeJson } from './localStorageJson'
+import { fetchBingoCard, saveBingoCard } from './bingoCardApi'
 
-const STORAGE_KEY = 'sgc.bingoCard.v1'
-
-function readCard(): BingoCard | null {
-  return readJson<BingoCard | null>(STORAGE_KEY, null)
-}
-
-function writeCard(card: BingoCard): BingoCard {
-  writeJson(STORAGE_KEY, card)
-  return card
-}
-
-/** Selects one single card. 
- * This always returns the single active card. */
-export function getOrCreateCard(): BingoCard {
-  const existing = readCard()
-  if (existing) return existing
-  return writeCard({
+function emptyCard(): BingoCard {
+  return {
     id: crypto.randomUUID(),
     hasFreeSpace: true,
     squares: emptySquares(),
     createdAt: new Date().toISOString(),
-  })
+  }
+}
+
+/**
+ * Fetches this client's card from the API, creating (and persisting) a fresh blank one if none
+ * exists yet. Every mutation below takes the current card as a parameter rather than re-fetching
+ * it itself. 
+ */
+export async function getOrCreateCard(clientId: string): Promise<BingoCard> {
+  const existing = await fetchBingoCard(clientId)
+  if (existing) return existing
+  return saveBingoCard(clientId, emptyCard())
 }
 
 /** No-ops on the FREE square while it's active. Free space label isn't user-editable in that state. */
-export function setSquareLabel(position: number, label: string): BingoCard {
-  const card = getOrCreateCard()
+export async function setSquareLabel(clientId: string, card: BingoCard, position: number, label: string): Promise<BingoCard> {
   if (card.hasFreeSpace && position === FREE_POSITION) return card
-  return writeCard({
+  return saveBingoCard(clientId, {
     ...card,
     squares: card.squares.map((sq) => (sq.position === position ? { ...sq, label } : sq)),
   })
 }
 
 /** No-ops on the FREE square while it's active. It's always completed, not toggleable. */
-export function toggleSquareCompleted(position: number): BingoCard {
-  const card = getOrCreateCard()
+export async function toggleSquareCompleted(clientId: string, card: BingoCard, position: number): Promise<BingoCard> {
   if (card.hasFreeSpace && position === FREE_POSITION) return card
-  return writeCard({
+  return saveBingoCard(clientId, {
     ...card,
     squares: card.squares.map((sq) => (sq.position === position ? { ...sq, completed: !sq.completed } : sq)),
   })
@@ -48,7 +42,6 @@ export function toggleSquareCompleted(position: number): BingoCard {
 
 /** Flips whether position 12 is the fixed FREE square. This never touches that square's own
  * stored label/completed, so switching it off and back on restores whatever was there. */
-export function setHasFreeSpace(hasFreeSpace: boolean): BingoCard {
-  const card = getOrCreateCard()
-  return writeCard({ ...card, hasFreeSpace })
+export async function setHasFreeSpace(clientId: string, card: BingoCard, hasFreeSpace: boolean): Promise<BingoCard> {
+  return saveBingoCard(clientId, { ...card, hasFreeSpace })
 }
