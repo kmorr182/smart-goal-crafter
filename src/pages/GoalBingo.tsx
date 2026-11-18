@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
-import { ToggleSwitch } from 'serious-component-library'
+import { Select, ToggleSwitch } from 'serious-component-library'
 import { BingoSquare } from '../components/bingo/BingoSquare'
 import { SettingsButton } from '../components/SettingsButton'
 import { CATEGORIES, detectCategory } from '../data/categories'
 import { getClientId } from '../lib/clientId'
-import { getOrCreateCard, setHasFreeSpace, setSquareLabel, toggleSquareCompleted } from '../lib/bingoCardRepository'
+import { getOrCreateCard, setHasFreeSpace, toggleSquareCompleted, updateSquare } from '../lib/bingoCardRepository'
 import { FREE_POSITION } from '../types/bingoCard'
 import type { BingoCard } from '../types/bingoCard'
+import type { CategoryKey } from '../types/goal'
 import styles from './GoalBingo.module.css'
+
+const CATEGORY_KEYS = Object.keys(CATEGORIES) as CategoryKey[]
 
 // Hardcoded, not the shared --step-*-rgb tokens in steps.css
 // This page is self-contained for now.
@@ -33,6 +36,7 @@ export function GoalBingo() {
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null)
   const [isEditingLabel, setIsEditingLabel] = useState(false)
   const [draft, setDraft] = useState('')
+  const [categoryDraft, setCategoryDraft] = useState<CategoryKey>('uncategorized')
 
   useEffect(() => {
     let cancelled = false
@@ -83,21 +87,28 @@ export function GoalBingo() {
   const squares = card.squares.map((sq) => {
     const isFree = card.hasFreeSpace && sq.position === FREE_POSITION
     const label = isFree ? '' : sq.label
-    const category = label ? detectCategory(label) : null
+    const category = sq.categoryOverride ?? (label ? detectCategory(label) : null)
     return { ...sq, isFree, completed: isFree ? true : sq.completed, label, category }
   })
   const completedCount = squares.filter((sq) => sq.completed).length
   const emptyCount = squares.filter((sq) => !sq.isFree && !sq.label).length
   const selectedSquare = selectedPosition !== null ? squares.find((sq) => sq.position === selectedPosition) ?? null : null
-  const isDirty = isEditingLabel && selectedSquare !== null && draft.trim() !== selectedSquare.label
+  // A category pick is staged here, not saved until user clicks save button.
+  const labelDirty = isEditingLabel && selectedSquare !== null && draft.trim() !== selectedSquare.label
+  const categoryDirty = selectedSquare !== null && categoryDraft !== (selectedSquare.category ?? 'uncategorized')
+  const isDirty = labelDirty || categoryDirty
 
   // Returns whether the commit actually succeeded (or there was nothing to commit), so callers
   // can tell a real failure apart from success instead of barreling ahead either way — a failed
-  // save here used to get silently treated the same as a successful one.
-  async function commitDraft(): Promise<boolean> {
+  // save here used to get silently treated the same as a successful one. Label and category are
+  // committed together in one request.
+  async function commitChanges(): Promise<boolean> {
     if (!card || selectedPosition === null) return true
     try {
-      const updated = await setSquareLabel(clientId, card, selectedPosition, draft.trim())
+      const updated = await updateSquare(clientId, card, selectedPosition, {
+        label: draft.trim(),
+        categoryOverride: categoryDraft,
+      })
       setCard(updated)
       setSaveError(null)
       return true
@@ -113,11 +124,12 @@ export function GoalBingo() {
   async function selectPosition(position: number | null) {
     if (isDirty) {
       const shouldSave = window.confirm('Save your changes to this square?')
-      if (shouldSave && !(await commitDraft())) return
+      if (shouldSave && !(await commitChanges())) return
     }
     setSelectedPosition(position)
     const sq = position !== null ? squares.find((s) => s.position === position) : null
     setDraft(sq ? sq.label : '')
+    setCategoryDraft(sq ? sq.category ?? 'uncategorized' : 'uncategorized')
     // An empty square has nothing to show read-only, so it opens straight into editing;
     // a square with a goal stays read-only until its label is clicked.
     setIsEditingLabel(sq ? sq.label === '' : false)
@@ -126,7 +138,7 @@ export function GoalBingo() {
   // Only leave edit mode on an actual successful save — otherwise a failed save would show the
   // stale label as if nothing were wrong, with the draft hidden behind one more click to retry.
   async function handleSave() {
-    if (await commitDraft()) setIsEditingLabel(false)
+    if (await commitChanges()) setIsEditingLabel(false)
   }
 
   async function handleMarkFinished() {
@@ -138,6 +150,11 @@ export function GoalBingo() {
     } catch (err) {
       setSaveError(errorMessage(err))
     }
+  }
+
+  // Part of the staged changes committed by handleSave, not an immediate write.
+  function selectCategory(value: string) {
+    setCategoryDraft(value as CategoryKey)
   }
 
   async function handleFreeSpaceChange(checked: boolean) {
@@ -224,11 +241,22 @@ export function GoalBingo() {
               </svg>
             </button>
 
-            {selectedSquare.category && (
-              <p className={styles.actionBarCategory}>
-                <span className={styles.categoryDot} style={{ background: CATEGORIES[selectedSquare.category].colorVar }} />
-                {CATEGORIES[selectedSquare.category].label}
-              </p>
+            {!selectedSquare.isFree && (
+              <div className={styles.actionBarCategory}>
+                <span className={styles.categoryDot} style={{ background: CATEGORIES[categoryDraft].colorVar }} />
+                <Select
+                  size="sm"
+                  aria-label="Category"
+                  value={categoryDraft}
+                  onChange={(event) => selectCategory(event.target.value)}
+                >
+                  {CATEGORY_KEYS.map((key) => (
+                    <option key={key} value={key}>
+                      {CATEGORIES[key].label}
+                    </option>
+                  ))}
+                </Select>
+              </div>
             )}
 
             {isEditingLabel ? (
@@ -247,8 +275,8 @@ export function GoalBingo() {
             )}
 
             <div className={styles.actionBarButtons}>
-              {isEditingLabel && (
-                <button type="button" onClick={() => void handleSave()} disabled={draft.trim() === selectedSquare.label}>
+              {isDirty && (
+                <button type="button" onClick={() => void handleSave()}>
                   Save
                 </button>
               )}
