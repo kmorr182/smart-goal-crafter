@@ -1,7 +1,11 @@
+import type { CategoryKey } from './goal'
+
 export interface BingoSquare {
   position: number
   label: string
   completed: boolean
+  /** Manual pick that wins over the label-based auto-detected category. Null/undefined means "auto". */
+  categoryOverride?: CategoryKey | null
 }
 
 export const FREE_POSITION = 12
@@ -22,5 +26,6 @@ export function emptySquares(): BingoSquare[] {
     position,
     label: '',
     completed: false,
+    categoryOverride: null,
   }))
 }

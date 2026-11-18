@@ -1,5 +1,6 @@
 import type { BingoCard } from '../types/bingoCard'
 import { FREE_POSITION, emptySquares } from '../types/bingoCard'
+import type { CategoryKey } from '../types/goal'
 import { fetchBingoCard, saveBingoCard } from './bingoCardApi'
 
 function emptyCard(): BingoCard {
@@ -22,12 +23,20 @@ export async function getOrCreateCard(clientId: string): Promise<BingoCard> {
   return saveBingoCard(clientId, emptyCard())
 }
 
-/** No-ops on the FREE square while it's active. Free space label isn't user-editable in that state. */
-export async function setSquareLabel(clientId: string, card: BingoCard, position: number, label: string): Promise<BingoCard> {
+/** Commits any combination of label/categoryOverride for one square in a single save, so a
+ * user staging both a new label and a new category only writes once, not once per field. Pass
+ * only the fields that actually changed. No-ops on the FREE square while it's active, same as
+ * the other per-square setters. */
+export async function updateSquare(
+  clientId: string,
+  card: BingoCard,
+  position: number,
+  patch: { label?: string; categoryOverride?: CategoryKey | null },
+): Promise<BingoCard> {
   if (card.hasFreeSpace && position === FREE_POSITION) return card
   return saveBingoCard(clientId, {
     ...card,
-    squares: card.squares.map((sq) => (sq.position === position ? { ...sq, label } : sq)),
+    squares: card.squares.map((sq) => (sq.position === position ? { ...sq, ...patch } : sq)),
   })
 }
 
