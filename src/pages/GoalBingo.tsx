@@ -1,20 +1,17 @@
 import { useEffect, useState } from 'react'
+import { useAuth } from 'react-oidc-context'
 import { Select, ToggleSwitch } from 'serious-component-library'
 import { BingoSquare } from '../components/bingo/BingoSquare'
 import { SettingsButton } from '../components/SettingsButton'
 import { CATEGORIES, detectCategory } from '../data/categories'
-import { getClientId } from '../lib/clientId'
 import { getOrCreateCard, setHasFreeSpace, toggleSquareCompleted, updateSquare } from '../lib/bingoCardRepository'
-import { FREE_POSITION } from '../types/bingoCard'
+import { FREE_POSITION, emptySquares } from '../types/bingoCard'
 import type { BingoCard } from '../types/bingoCard'
 import type { CategoryKey } from '../types/goal'
 import styles from './GoalBingo.module.css'
 
 const CATEGORY_KEYS = Object.keys(CATEGORIES) as CategoryKey[]
 
-// Hardcoded, not the shared --step-*-rgb tokens in steps.css
-// This page is self-contained for now.
-// Need to pull out hard coded colors into shared theme file
 const LETTERS = [
   { char: 'B', color: 'rgb(176,95,158)' },
   { char: 'I', color: 'rgb(158,68,138)' },
@@ -27,8 +24,12 @@ function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : 'Something went wrong'
 }
 
+function localOnlyCard(): BingoCard {
+  return { id: 'local', hasFreeSpace: true, squares: emptySquares(), createdAt: new Date().toISOString() }
+}
+
 export function GoalBingo() {
-  const [clientId] = useState(() => getClientId())
+  const auth = useAuth()
   const [card, setCard] = useState<BingoCard | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -39,8 +40,25 @@ export function GoalBingo() {
   const [categoryDraft, setCategoryDraft] = useState<CategoryKey>('uncategorized')
 
   useEffect(() => {
+    if (auth.isLoading) return
+
+    if (!auth.isAuthenticated) {
+      setCard(localOnlyCard())
+      setLoadError(null)
+      setIsLoading(false)
+      return
+    }
+
+    const token = auth.user?.access_token
+    if (!token) {
+      setLoadError('Could not read your sign-in session.')
+      setIsLoading(false)
+      return
+    }
+
     let cancelled = false
-    getOrCreateCard(clientId)
+    setIsLoading(true)
+    getOrCreateCard(token)
       .then((loaded) => {
         if (!cancelled) setCard(loaded)
       })
@@ -53,7 +71,7 @@ export function GoalBingo() {
     return () => {
       cancelled = true
     }
-  }, [clientId])
+  }, [auth.isLoading, auth.isAuthenticated, auth.user])
 
   if (isLoading) {
     return (
@@ -74,16 +92,15 @@ export function GoalBingo() {
         <SettingsButton />
         <main className={styles.page}>
           <div className={styles.inner}>
-            <p className={styles.statusText}>{loadError ?? 'Something went wrong loading your card.'}</p>
+            <p className={styles.statusText}>
+              {loadError ?? 'Something went wrong loading your card.'} Please refresh the page to try again.
+            </p>
           </div>
         </main>
       </>
     )
   }
 
-  // Category is derived from the label, not stored, so it can never drift out of sync with
-  // what's actually typed in the square. Uses the CATEGORIES/detectCategory
-  // one category system for the whole app.
   const squares = card.squares.map((sq) => {
     const isFree = card.hasFreeSpace && sq.position === FREE_POSITION
     const label = isFree ? '' : sq.label
@@ -93,19 +110,20 @@ export function GoalBingo() {
   const completedCount = squares.filter((sq) => sq.completed).length
   const emptyCount = squares.filter((sq) => !sq.isFree && !sq.label).length
   const selectedSquare = selectedPosition !== null ? squares.find((sq) => sq.position === selectedPosition) ?? null : null
-  // A category pick is staged here, not saved until user clicks save button.
   const labelDirty = isEditingLabel && selectedSquare !== null && draft.trim() !== selectedSquare.label
   const categoryDirty = selectedSquare !== null && categoryDraft !== (selectedSquare.category ?? 'uncategorized')
   const isDirty = labelDirty || categoryDirty
 
-  // Returns whether the commit actually succeeded (or there was nothing to commit), so callers
-  // can tell a real failure apart from success instead of barreling ahead either way — a failed
-  // save here used to get silently treated the same as a successful one. Label and category are
-  // committed together in one request.
   async function commitChanges(): Promise<boolean> {
     if (!card || selectedPosition === null) return true
+    if (!auth.isAuthenticated) {
+      auth.signinPopup()
+      return false
+    }
+    const token = auth.user?.access_token
+    if (!token) return false
     try {
-      const updated = await updateSquare(clientId, card, selectedPosition, {
+      const updated = await updateSquare(token, card, selectedPosition, {
         label: draft.trim(),
         categoryOverride: categoryDraft,
       })
@@ -118,9 +136,6 @@ export function GoalBingo() {
     }
   }
 
-  // Native confirm is the explicit "ask before losing changes" step. No auto-save. If the save
-  // itself fails, stay put instead of switching away — otherwise the unsaved text would be
-  // silently discarded along with the failed save, with only a page-level error banner as a clue.
   async function selectPosition(position: number | null) {
     if (isDirty) {
       const shouldSave = window.confirm('Save your changes to this square?')
@@ -130,21 +145,23 @@ export function GoalBingo() {
     const sq = position !== null ? squares.find((s) => s.position === position) : null
     setDraft(sq ? sq.label : '')
     setCategoryDraft(sq ? sq.category ?? 'uncategorized' : 'uncategorized')
-    // An empty square has nothing to show read-only, so it opens straight into editing;
-    // a square with a goal stays read-only until its label is clicked.
     setIsEditingLabel(sq ? sq.label === '' : false)
   }
 
-  // Only leave edit mode on an actual successful save — otherwise a failed save would show the
-  // stale label as if nothing were wrong, with the draft hidden behind one more click to retry.
   async function handleSave() {
     if (await commitChanges()) setIsEditingLabel(false)
   }
 
   async function handleMarkFinished() {
     if (!card || selectedPosition === null) return
+    if (!auth.isAuthenticated) {
+      auth.signinPopup()
+      return
+    }
+    const token = auth.user?.access_token
+    if (!token) return
     try {
-      const updated = await toggleSquareCompleted(clientId, card, selectedPosition)
+      const updated = await toggleSquareCompleted(token, card, selectedPosition)
       setCard(updated)
       setSaveError(null)
     } catch (err) {
@@ -152,15 +169,20 @@ export function GoalBingo() {
     }
   }
 
-  // Part of the staged changes committed by handleSave, not an immediate write.
   function selectCategory(value: string) {
     setCategoryDraft(value as CategoryKey)
   }
 
   async function handleFreeSpaceChange(checked: boolean) {
     if (!card) return
+    if (!auth.isAuthenticated) {
+      auth.signinPopup()
+      return
+    }
+    const token = auth.user?.access_token
+    if (!token) return
     try {
-      const updated = await setHasFreeSpace(clientId, card, checked)
+      const updated = await setHasFreeSpace(token, card, checked)
       setCard(updated)
       setSaveError(null)
     } catch (err) {
@@ -275,8 +297,12 @@ export function GoalBingo() {
             )}
 
             <div className={styles.actionBarButtons}>
-              {isDirty && (
-                <button type="button" onClick={() => void handleSave()}>
+              {!auth.isAuthenticated ? (
+                <button type="button" onClick={() => auth.signinPopup()}>
+                  Sign in to save
+                </button>
+              ) : (
+                <button type="button" onClick={() => void handleSave()} disabled={!isDirty}>
                   Save
                 </button>
               )}
