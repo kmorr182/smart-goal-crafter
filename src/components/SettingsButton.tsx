@@ -1,6 +1,14 @@
-import { Popover } from 'serious-component-library'
+import { useAuth } from 'react-oidc-context'
+import { Button, Popover } from 'serious-component-library'
 import { ThemeToggle } from './ThemeToggle'
 import styles from './SettingsButton.module.css'
+
+function signOutRedirect() {
+  const clientId = import.meta.env.VITE_COGNITO_CLIENT_ID
+  const logoutUri = `${window.location.origin}/bingo`
+  const cognitoDomain = import.meta.env.VITE_COGNITO_DOMAIN
+  window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`
+}
 
 //TODO: Replace this svg with an icon from serious component library
 const GearIcon = () => (
@@ -12,6 +20,13 @@ const GearIcon = () => (
 
 /** A persistent settings entry point */
 export function SettingsButton() {
+  const auth = useAuth()
+
+  async function handleSignOut() {
+    await auth.removeUser()
+    signOutRedirect()
+  }
+
   return (
     <Popover
       trigger={
@@ -23,6 +38,20 @@ export function SettingsButton() {
       <div className={styles.content}>
         <div className={styles.title}>Appearance</div>
         <ThemeToggle />
+
+        <div className={styles.title} style={{ marginTop: 16 }}>Account</div>
+        {auth.isAuthenticated ? (
+          <>
+            <p className={styles.accountEmail}>{auth.user?.profile.email}</p>
+            <Button size="sm" variant="outline" fullWidth onClick={() => void handleSignOut()}>
+              Sign out
+            </Button>
+          </>
+        ) : (
+          <Button size="sm" variant="outline" fullWidth onClick={() => auth.signinPopup()}>
+            Sign in
+          </Button>
+        )}
       </div>
     </Popover>
   )

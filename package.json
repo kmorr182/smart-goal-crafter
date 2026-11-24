@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "serious-component-library": "github:kmorr182/serious-component-library",
+    "oidc-client-ts": "^3.5.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.2"
+    "react-oidc-context": "^3.3.1",
+    "react-router-dom": "^7.18.2",
+    "serious-component-library": "github:kmorr182/serious-component-library"
   },
   "devDependencies": {
     "@types/node": "^24.13.2",

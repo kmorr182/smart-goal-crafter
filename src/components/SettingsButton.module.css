@@ -46,3 +46,10 @@
   color: var(--ruk-color-text-muted);
   margin-bottom: 10px;
 }
+
+.accountEmail {
+  font-size: 0.8rem;
+  color: var(--ruk-color-text);
+  margin: 0 0 8px;
+  overflow-wrap: break-word;
+}
